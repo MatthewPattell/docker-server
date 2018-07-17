@@ -1,0 +1,14 @@
+{
+  "name": "matthew-p/docker-server",
+  "description": "Universal docker server, PHP FPM, Nginx",
+  "type": "package",
+  "keywords": ["docker","server","php","fpm","nginx"],
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "Matthew Patell",
+      "email": "lukomi@mail.ru"
+    }
+  ],
+  "bin": ["bin/site-start.sh", "bin/site-exec.sh", "bin/site-run.sh"]
+}

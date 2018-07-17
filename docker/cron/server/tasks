@@ -1,0 +1,10 @@
+# CRON TASKS.
+# m h  dom mon dow   command
+*/5 * * * *           bash -c "/scripts/add-cron.sh"
+*/5 * * * *           bash -c "/scripts/set-permissions.sh"
+
+# PASTE TASKS BELOW
+# EXAMPLE
+# 16 4 * * *          bash -c '/scripts/run-command.sh "php -v"'
+
+# DO NOT REMOVE THIS LINE AND END LINE!!!!

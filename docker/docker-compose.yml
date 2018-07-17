@@ -1,0 +1,57 @@
+version: '2'
+
+services:
+  nginx:
+    image: ${NGINX_REPOSITORY}
+    container_name: ${PROJECT_NAME}_nginx
+    hostname: nginx
+    ports:
+      - ${SERVER_HTTP_PORT}:80
+      - ${SERVER_SSL_PORT}:443
+    volumes:
+      - ${PROJECT_ROOT}:${PROJECT_CONTAINER_DIR}
+      - ${PROJECT_ROOT}/docker/nginx/php-fpm.conf:/etc/nginx/php-fpm.conf
+      - ${PROJECT_ROOT}/docker/nginx/conf.d:/etc/nginx/conf.d
+      - ${PROJECT_ROOT}/docker/nginx/lua:/etc/nginx/lua
+      - ${PROJECT_ROOT}/docker/nginx/snippets:/etc/nginx/snippets
+      - ${PROJECT_ROOT}/docker/nginx/logs:/var/log/nginx
+      - ${PROJECT_ROOT}/docker/supervisord/supervisord.conf:/etc/supervisor/supervisord.conf
+      - ${PROJECT_ROOT}/docker/supervisord/nginx/logs:/var/log/supervisord
+      - ${PROJECT_ROOT}/docker/supervisord/nginx/services:/etc/supervisor/conf.d
+    depends_on:
+      - server
+    networks:
+      main_x:
+        aliases:
+          - nginx
+
+  server:
+    hostname: server
+    image: ${SERVER_REPOSITORY}
+    container_name: ${PROJECT_NAME}_server
+    expose:
+      - ${DEBUG_PORT}
+    volumes:
+      - ${PROJECT_ROOT}:${PROJECT_CONTAINER_DIR}
+      - ${PROJECT_ROOT}/docker/letsencrypt/${PROJECT_ENVIRONMENT}:/etc/letsencrypt
+      - ${PROJECT_ROOT}/docker/php/php.ini:/etc/php/7.1/cli/php.ini
+      - ${PROJECT_ROOT}/docker/php/php.ini:/etc/php/7.1/fpm/php.ini
+      - ${PROJECT_ROOT}/docker/php/php-fpm.conf:/etc/php/7.1/fpm/php-fpm.conf
+      - ${PROJECT_ROOT}/docker/php/pool.d:/etc/php/7.1/fpm/pool.d/
+      - ${PROJECT_ROOT}/docker/php/mods-available/xdebug.ini:/etc/php/7.1/mods-available/xdebug.ini
+      - ${PROJECT_ROOT}/docker/php/logs:/var/log/php7.1-fpm/
+      - ${PROJECT_ROOT}/docker/supervisord/supervisord.conf:/etc/supervisor/supervisord.conf
+      - ${PROJECT_ROOT}/docker/supervisord/server/logs:/var/log/supervisord
+      - ${PROJECT_ROOT}/docker/supervisord/server/services:/etc/supervisor/conf.d
+      - ${PROJECT_ROOT}/docker/cron/server/logs:/var/log/cron
+      - ${PROJECT_ROOT}/docker/scripts:/scripts
+      - ${PROJECT_ROOT}/docker/pam/pam.d/cron:/etc/pam.d/cron
+    working_dir: ${PROJECT_CONTAINER_DIR}
+    networks:
+      main_x:
+        aliases:
+          - server
+
+networks:
+  main_x:
+    driver: bridge

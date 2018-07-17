@@ -1,0 +1,59 @@
+# Variable automaticaly replaced:
+# TOPDOMAIN, SSL_INCLUDE, COMMON_DOMAIN, C_DOMAIN, PARSED_DOMAINS
+
+# allow domains:
+#
+# <domains-include>DOMAIN_COMMON</domains-include>
+#
+# parsed domains: $PARSED_DOMAINS
+
+server {
+    charset                     utf-8;
+    client_max_body_size        128M;
+
+    listen                      80;
+
+    server_name                 $COMMON_DOMAIN;
+
+    root                        /var/www/html/frontend/web;
+    index                       index.php;
+
+    # if ssl certificate exist for domain, here will be included ssl directives
+    $SSL_INCLUDE
+
+    include snippets/letsencrypt-acme-challenge.conf;
+    include snippets/protection.conf;
+    include snippets/rewrite.conf;
+    include snippets/static.conf;
+    include snippets/external-rules.conf;
+
+    include snippets/blacklist_ip.conf;
+
+    # robots.txt (robots.txt -> robots_[by].txt)
+    location ~ ^(.*)robots\.(.*)$ {
+        log_not_found   off;
+        access_log      off;
+        try_files       $uri $uri/ /robots_$TOPDOMAIN.txt
+        break;
+    }
+
+    # sitemap.xml (sitemap.xml -> sitemap_[by].xml)
+    location ~ ^(.*)sitemap\.(.*)$ {
+        log_not_found   off;
+        access_log      off;
+        try_files       $uri $uri/ /sitemap_$TOPDOMAIN.xml;
+        break;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.php$is_args$args;
+    }
+    
+    # allow only `/index.php` to be executed via php
+    location ~ ^/index\.php$ {
+        # Redirect everything that isn't a real file to index.php
+        try_files   $uri $uri/ /$is_args$args;
+        # Tell nginx to pass php scripts to php-fpm
+        include     php-fpm.conf;
+    }
+}

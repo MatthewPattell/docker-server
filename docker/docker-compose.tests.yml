@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+  server_test:
+    extends:
+      file: docker-compose.yml
+      service: server
+    depends_on:
+      - server
+      - nginx
+    container_name: ${PROJECT_NAME}_server_test
+    networks:
+      main_x:
+        aliases:
+          - server_test

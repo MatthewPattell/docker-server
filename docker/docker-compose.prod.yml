@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+  nginx:
+    env_file: .env
+    mem_limit: 268500000
+    links:
+    - server
+
+  server:
+    env_file: .env
+    mem_limit: 537000000
