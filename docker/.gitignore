@@ -2,6 +2,7 @@
 .env
 .env-*
 !.env-sample
+!.env-default
 !.env-ci
 mysql/storage
 ssh/authorized_keys
