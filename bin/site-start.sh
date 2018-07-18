@@ -2,28 +2,34 @@
 
 # up/down app
 
-DETACHED_MODE=""
-ACTION=$2
-MODE=${1}
-ENV_MODE="docker-compose.${1}.yml"
-DEV_SERVICES="-f docker-compose.redis.yml"
-OTHER_PARAMS=${@:3}
+for i in "$@"
+do
+case $i in
+    -e=*|--env-file=*)
+    ENV_FILE=$(realpath "${i#*=}")
+    shift
+    ;;
+    *)
+          # unknown option
+    ;;
+esac
+done
 
-if [ -f "docker/${ENV_MODE}" ]; then
-    ENV_MODE="-f ${ENV_MODE}"
-else
-    ENV_MODE=""
-    ACTION=$1
-    OTHER_PARAMS=${@:2}
+if [ ! -f "$ENV_FILE" ]; then
+    echo "Env file does not exist: $ENV_FILE"
+    exit 1;
 fi
 
-if [ ${ACTION} = "up" ]; then
-    DETACHED_MODE="-d"
+# Getting environments for using in current script
+set -a
+. $ENV_FILE
+set +a
+
+ACTION=$1
+
+if [ "${ACTION}" = "down"  ] && [ "$DEFAULT_DETACHED_MODE" = "-d" ]; then
+    DEFAULT_DETACHED_MODE=""
 fi
 
-if [ "${MODE}" != "dev" ]; then
-    DEV_SERVICES=""
-fi
-
-cd docker && \
-    docker-compose -f docker-compose.yml ${ENV_MODE} ${DEV_SERVICES} ${ACTION} ${DETACHED_MODE} ${OTHER_PARAMS}
+cd ${DOCKER_FOLDER_NAME} && \
+    docker-compose ${SERVICES} ${ACTION} ${DEFAULT_DETACHED_MODE} ${OTHER_PARAMS}
