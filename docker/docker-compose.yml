@@ -8,21 +8,21 @@ services:
     ports:
       - ${SERVER_HTTP_PORT}:80
       - ${SERVER_SSL_PORT}:443
+    environment:
+      ENV_PATH: ${PROJECT_DOCKER_FOLDER_CONTAINER}/.env
     volumes:
-      - ${PROJECT_DOCKER_STORAGE}:/docker-server
-      - ${PROJECT_DOCKER_STORAGE}/nginx/nginx.conf:${PROJECT_CONTAINER_DIR}/docker/nginx/nginx.conf
-      - ${PROJECT_DOCKER_STORAGE}/nginx/php-fpm.conf:/etc/nginx/php-fpm.conf
-      - ${PROJECT_DOCKER_STORAGE}/nginx/conf.d:/etc/nginx/conf.d
-      - ${PROJECT_DOCKER_STORAGE}/nginx/lua:/etc/nginx/lua
-      - ${PROJECT_DOCKER_STORAGE}/nginx/snippets:/etc/nginx/snippets
-      - ${PROJECT_DOCKER_STORAGE}/nginx/logs:/var/log/nginx
-      - ${PROJECT_DOCKER_STORAGE}/supervisord/supervisord.conf:/etc/supervisor/supervisord.conf
-      - ${PROJECT_DOCKER_STORAGE}/supervisord/nginx/logs:/var/log/supervisord
-      - ${PROJECT_DOCKER_STORAGE}/supervisord/nginx/services:/etc/supervisor/conf.d
+      - ${PROJECT_DOCKER_FOLDER}:${PROJECT_DOCKER_FOLDER_CONTAINER}
+      - ${PROJECT_DOCKER_FOLDER}/scripts:/scripts
+      - ${PROJECT_DOCKER_FOLDER}/nginx/php-fpm.conf:/etc/nginx/php-fpm.conf
+      - ${PROJECT_DOCKER_FOLDER}/nginx/conf.d:/etc/nginx/conf.d
+      - ${PROJECT_DOCKER_FOLDER}/nginx/lua:/etc/nginx/lua
+      - ${PROJECT_DOCKER_FOLDER}/nginx/snippets:/etc/nginx/snippets
+      - ${PROJECT_DOCKER_FOLDER}/nginx/logs:/var/log/nginx
+      - ${PROJECT_DOCKER_FOLDER}/supervisord/supervisord.conf:/etc/supervisor/supervisord.conf
+      - ${PROJECT_DOCKER_FOLDER}/supervisord/nginx/logs:/var/log/supervisord
+      - ${PROJECT_DOCKER_FOLDER}/supervisord/nginx/services:/etc/supervisor/conf.d
     depends_on:
       - server
-    environment:
-      ENV_PATH: ${PROJECT_ENV_PATH}
     networks:
       main_x:
         aliases:
@@ -34,25 +34,25 @@ services:
     container_name: ${PROJECT_NAME}_server
     expose:
       - ${DEBUG_PORT}
-    volumes:
-      - ${PROJECT_ROOT}:${PROJECT_CONTAINER_DIR}
-      - ${PROJECT_DOCKER_STORAGE}:/docker-server
-      - ${PROJECT_DOCKER_STORAGE}/letsencrypt/${PROJECT_ENVIRONMENT}:/etc/letsencrypt
-      - ${PROJECT_DOCKER_STORAGE}/php/php.ini:/etc/php/7.1/cli/php.ini
-      - ${PROJECT_DOCKER_STORAGE}/php/php.ini:/etc/php/7.1/fpm/php.ini
-      - ${PROJECT_DOCKER_STORAGE}/php/php-fpm.conf:/etc/php/7.1/fpm/php-fpm.conf
-      - ${PROJECT_DOCKER_STORAGE}/php/pool.d:/etc/php/7.1/fpm/pool.d/
-      - ${PROJECT_DOCKER_STORAGE}/php/mods-available/xdebug.ini:/etc/php/7.1/mods-available/xdebug.ini
-      - ${PROJECT_DOCKER_STORAGE}/php/logs:/var/log/php7.1-fpm/
-      - ${PROJECT_DOCKER_STORAGE}/supervisord/supervisord.conf:/etc/supervisor/supervisord.conf
-      - ${PROJECT_DOCKER_STORAGE}/supervisord/server/logs:/var/log/supervisord
-      - ${PROJECT_DOCKER_STORAGE}/supervisord/server/services:/etc/supervisor/conf.d
-      - ${PROJECT_DOCKER_STORAGE}/cron/server/logs:/var/log/cron
-      - ${PROJECT_DOCKER_STORAGE}/scripts:/scripts
-      - ${PROJECT_DOCKER_STORAGE}/pam/pam.d/cron:/etc/pam.d/cron
-    working_dir: ${PROJECT_CONTAINER_DIR}
     environment:
-      ENV_PATH: ${PROJECT_ENV_PATH}
+      ENV_PATH: ${PROJECT_DOCKER_FOLDER_CONTAINER}/.env
+    volumes:
+      - ${PROJECT_ROOT}:${PROJECT_ROOT_CONTAINER}
+      - ${PROJECT_DOCKER_FOLDER}:${PROJECT_DOCKER_FOLDER_CONTAINER}
+      - ${PROJECT_DOCKER_FOLDER}/letsencrypt/${PROJECT_ENVIRONMENT}:/etc/letsencrypt
+      - ${PROJECT_DOCKER_FOLDER}/php/php.ini:/etc/php/7.1/cli/php.ini
+      - ${PROJECT_DOCKER_FOLDER}/php/php.ini:/etc/php/7.1/fpm/php.ini
+      - ${PROJECT_DOCKER_FOLDER}/php/php-fpm.conf:/etc/php/7.1/fpm/php-fpm.conf
+      - ${PROJECT_DOCKER_FOLDER}/php/pool.d:/etc/php/7.1/fpm/pool.d/
+      - ${PROJECT_DOCKER_FOLDER}/php/mods-available/xdebug.ini:/etc/php/7.1/mods-available/xdebug.ini
+      - ${PROJECT_DOCKER_FOLDER}/php/logs:/var/log/php7.1-fpm/
+      - ${PROJECT_DOCKER_FOLDER}/supervisord/supervisord.conf:/etc/supervisor/supervisord.conf
+      - ${PROJECT_DOCKER_FOLDER}/supervisord/server/logs:/var/log/supervisord
+      - ${PROJECT_DOCKER_FOLDER}/supervisord/server/services:/etc/supervisor/conf.d
+      - ${PROJECT_DOCKER_FOLDER}/cron/server/logs:/var/log/cron
+      - ${PROJECT_DOCKER_FOLDER}/scripts:/scripts
+      - ${PROJECT_DOCKER_FOLDER}/pam/pam.d/cron:/etc/pam.d/cron
+    working_dir: ${PROJECT_ROOT_CONTAINER}
     networks:
       main_x:
         aliases:

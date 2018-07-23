@@ -4,12 +4,12 @@
 
 # Export environment to OS
 set -a
-. ${PROJECT_ENV_PATH}
+. ${ENV_PATH}
 set +a
 
 ENVIRONMENT=$(echo "$PROJECT_ENVIRONMENT" | tr '[:upper:]' '[:lower:]')
 
-# find patterns on config files
+# find patterns on config files: <tag-name>search-string</tag-name>
 # Example: findPattern "pattern-name" "string search"
 function findPattern {
    export PERL_ARGUMENT1="$@"
@@ -19,10 +19,8 @@ function findPattern {
 # get redis ip by host
 export REDIS_IP=$(getent hosts "$REDIS_HOST" | cut -f 1 -d " ")
 
-echo $REDIS_IP
-
 # COPY nginx.conf
-NGINX_TEMPLATE_CODE=$(cat "${PROJECT_CONTAINER_DIR}"/docker/nginx/nginx.conf)
+NGINX_TEMPLATE_CODE=$(cat "${PROJECT_DOCKER_FOLDER_CONTAINER}"/nginx/nginx.conf)
 NGINX_TEMPLATE_CODE="${NGINX_TEMPLATE_CODE//\$ENVIRONMENT/$PROJECT_ENVIRONMENT}"
 echo "${NGINX_TEMPLATE_CODE}" > /etc/nginx/nginx.conf
 
@@ -30,15 +28,27 @@ echo "${NGINX_TEMPLATE_CODE}" > /etc/nginx/nginx.conf
 find /etc/nginx/conf-dynamic.d -name "*.conf" -type f -delete
 
 # create dynamic nginx configs
-for COMMON_TEMPLATE in ${PROJECT_CONTAINER_DIR}/docker/nginx/templates/*.conf; do
+for COMMON_TEMPLATE in ${PROJECT_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.conf; do
     COMMON_DYNAMIC=/etc/nginx/conf-dynamic.d/$(basename $COMMON_TEMPLATE)
 
     # get templace
     TEMPLATE_CODE=$(cat $COMMON_TEMPLATE)
 
+    # copy template
+    TEMPLATE_PATH=$(findPattern "template" $TEMPLATE_CODE)
+
+    if [ ! -f $TEMPLATE_PATH ]; then
+        TEMPLATE_PATH="${PROJECT_DOCKER_FOLDER_CONTAINER}/nginx/$TEMPLATE_PATH"
+    fi
+
+    TEMPLATE_CODE=$"$TEMPLATE_CODE \n $(cat $TEMPLATE_PATH)"
+
     # allow domain
     ONLY_DOMAINS=$(findPattern "domains-include" $TEMPLATE_CODE)
     ONLY_DOMAINS=$(echo $(perl -e 'print $ENV{$ARGV[0]}' -- $ONLY_DOMAINS))
+
+    # root path
+    REPLACE_ROOT=$(findPattern "root-path" $TEMPLATE_CODE)
 
     # Clean file
     echo "" > $COMMON_DYNAMIC
@@ -57,6 +67,7 @@ for COMMON_TEMPLATE in ${PROJECT_CONTAINER_DIR}/docker/nginx/templates/*.conf; d
         TEMPLATE="${TEMPLATE//\$TOPDOMAIN/$TOPDOMAIN}"
         TEMPLATE="${TEMPLATE//\$C_DOMAIN/$C_DOMAIN}"
         TEMPLATE="${TEMPLATE//\$PARSED_DOMAINS/$ONLY_DOMAINS}"
+        TEMPLATE="${TEMPLATE//\$ROOT_PATH/$REPLACE_ROOT}"
 
         SSL_DERICTIVE=""
 
@@ -69,8 +80,8 @@ for COMMON_TEMPLATE in ${PROJECT_CONTAINER_DIR}/docker/nginx/templates/*.conf; d
         fi
 
         if [[ $CERTIFICATE_DOMAIN != "" ]]; then
-            SSL_KEY=${PROJECT_CONTAINER_DIR}/docker/letsencrypt/${PROJECT_ENVIRONMENT}/live/${CERTIFICATE_DOMAIN}/privkey.pem;
-            SSL_CERT=${PROJECT_CONTAINER_DIR}/docker/letsencrypt/${PROJECT_ENVIRONMENT}/live/${CERTIFICATE_DOMAIN}/fullchain.pem;
+            SSL_KEY=${PROJECT_DOCKER_FOLDER_CONTAINER}/letsencrypt/${PROJECT_ENVIRONMENT}/live/${CERTIFICATE_DOMAIN}/privkey.pem;
+            SSL_CERT=${PROJECT_DOCKER_FOLDER_CONTAINER}/letsencrypt/${PROJECT_ENVIRONMENT}/live/${CERTIFICATE_DOMAIN}/fullchain.pem;
 
             if [ -f $SSL_KEY ] && [ -f $SSL_CERT ]; then
                 SSL_DERICTIVE="
@@ -89,4 +100,4 @@ for COMMON_TEMPLATE in ${PROJECT_CONTAINER_DIR}/docker/nginx/templates/*.conf; d
 done
 
 # Run nginx with modules
-nginx -g 'daemon off;'
+# nginx -g 'daemon off;'

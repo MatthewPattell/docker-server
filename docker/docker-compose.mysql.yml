@@ -13,9 +13,9 @@ services:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     volumes:
-      - ${PROJECT_DOCKER_STORAGE}/mysql/my.cnf:/etc/mysql/conf.d/mysql.cnf
-      - ${PROJECT_DOCKER_STORAGE}/mysql/storage:/var/lib/mysql
-      - ${PROJECT_DOCKER_STORAGE}/mysql/logs:/var/log/mysql
+      - ${PROJECT_DOCKER_FOLDER}/mysql/my.cnf:/etc/mysql/conf.d/mysql.cnf
+      - ${PROJECT_DOCKER_FOLDER}/mysql/storage:/var/lib/mysql
+      - ${PROJECT_DOCKER_FOLDER}/mysql/logs:/var/log/mysql
     networks:
       main_x:
         aliases:

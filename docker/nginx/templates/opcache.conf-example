@@ -7,6 +7,10 @@
 #
 # parsed domains: $PARSED_DOMAINS
 
+# root path:
+#
+# <root-path>/var/www/html/opcache</root-path>
+
 # change certificate domain:
 #
 # <certificate-domain>$C_DOMAIN.$TOPDOMAIN</certificate-domain>
@@ -19,7 +23,7 @@ server {
 
     server_name          $COMMON_DOMAIN;
 
-    root                 /var/www/html/opcache;
+    root                 $ROOT_PATH;
     index                index.php;
 
     # if ssl certificate exist for domain, here will be included ssl directives

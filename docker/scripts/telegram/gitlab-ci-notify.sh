@@ -2,7 +2,7 @@
 
 # Getting environments for using in current script
 set -a
-. ${PROJECT_ENV_PATH}
+. ${ENV_PATH}
 set +a
 
 TIME="10"

@@ -12,3 +12,4 @@ SERVICE=$1
 SERVICE_COMMAND=$2
 
 docker-compose ${SERVICES} run --rm ${SERVICE} /bin/bash -c "${SERVICE_COMMAND}"
+docker-compose ${SERVICES} down

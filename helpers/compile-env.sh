@@ -26,15 +26,15 @@ ENV_FILES="${VENDOR_DIR}/docker/.env-default,${ENV_FILES}"
 SERVER_ENVS=""
 IFS=',' read -ra ADDR <<< "$ENV_FILES"
 for ENV_FILE in "${ADDR[@]}"; do
-    ENV_FILE=$(readlink -f "$ENV_FILE")
+    ENV_FILE_FULL_PATH=$(readlink -f "$ENV_FILE")
 
-    if [ ! -f "$ENV_FILE" ]; then
+    if [ ! -f "$ENV_FILE_FULL_PATH" ]; then
         echo "Env file does not exist (skip): $ENV_FILE"
     else
         # Getting environments for using in current and parent script
         # This environments will be passed in docker compose files
         set -a
-        . $ENV_FILE
+        . $ENV_FILE_FULL_PATH
         set +a
 
         while IFS='=' read -r name value; do
@@ -42,9 +42,12 @@ for ENV_FILE in "${ADDR[@]}"; do
             if [ ! -z "$name" ]; then
                 SERVER_ENVS="${SERVER_ENVS} $name"
             fi
-        done < $ENV_FILE
+        done < $ENV_FILE_FULL_PATH
     fi
 done
+
+# generated env path
+export PROJECT_ENV_PATH="${PROJECT_DOCKER_FOLDER}/.env"
 
 # Get realpath docker compose files by default
 SERVICES_PATHS=""
