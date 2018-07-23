@@ -39,12 +39,14 @@ for COMMON_TEMPLATE in ${PROJECT_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*
     # copy template
     TEMPLATE_PATH=$(findPattern "template" $TEMPLATE_CODE)
 
-    if [ ! -f $TEMPLATE_PATH ]; then
-        TEMPLATE_PATH="${PROJECT_DOCKER_FOLDER_CONTAINER}/nginx/$TEMPLATE_PATH"
-    fi
+    if [ ! -z $TEMPLATE_PATH ]; then
+        if [ ! -f $TEMPLATE_PATH ]; then
+            TEMPLATE_PATH="${PROJECT_DOCKER_FOLDER_CONTAINER}/nginx/$TEMPLATE_PATH"
+        fi
 
-    # get template code without comments (if "copy template" directive exist)
-    TEMPLATE_CODE=$(echo -e "$TEMPLATE_CODE \n\n $(grep -o '^[^#]*' $TEMPLATE_PATH)")
+        # get template code without comments (if "copy template" directive exist)
+        TEMPLATE_CODE=$(echo -e "$TEMPLATE_CODE \n\n $(grep -o '^[^#]*' $TEMPLATE_PATH)")
+    fi
 
     # allow domain
     ONLY_DOMAINS=$(findPattern "domains-include" $TEMPLATE_CODE)
