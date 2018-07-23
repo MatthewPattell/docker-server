@@ -33,10 +33,13 @@ fi
 
 # Config composer
 composer config -g github-oauth.github.com $GIT_AUTHTOKEN
-composer global require "fxp/composer-asset-plugin": "^1.4.2"
-composer global require "hirak/prestissimo:~0.3.7"
 
-cd ${PROJECT_ROOT_CONTAINER} && composer install
+if [ $RUN_SERVER_COMPOSER == "1" ]; then
+    composer global require "fxp/composer-asset-plugin": "^1.4.2"
+    composer global require "hirak/prestissimo:~0.3.7"
+
+    cd ${PROJECT_ROOT_CONTAINER} && composer install
+fi;
 
 # php debug
 if [[ $PROJECT_ENVIRONMENT == "DEV" ]]; then

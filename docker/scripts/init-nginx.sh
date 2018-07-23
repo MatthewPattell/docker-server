@@ -17,7 +17,9 @@ function findPattern {
 }
 
 # get redis ip by host
-export REDIS_IP=$(getent hosts "$REDIS_HOST" | cut -f 1 -d " ")
+if [ ! -z "$REDIS_HOST" ]; then
+    export REDIS_IP=$(getent hosts "$REDIS_HOST" | cut -f 1 -d " ")
+fi
 
 # COPY nginx.conf
 NGINX_TEMPLATE_CODE=$(cat "${PROJECT_DOCKER_FOLDER_CONTAINER}"/nginx/nginx.conf)
@@ -41,7 +43,8 @@ for COMMON_TEMPLATE in ${PROJECT_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*
         TEMPLATE_PATH="${PROJECT_DOCKER_FOLDER_CONTAINER}/nginx/$TEMPLATE_PATH"
     fi
 
-    TEMPLATE_CODE=$"$TEMPLATE_CODE \n $(cat $TEMPLATE_PATH)"
+    # get template code without comments (if "copy template" directive exist)
+    TEMPLATE_CODE=$(echo -e "$TEMPLATE_CODE \n\n $(grep -o '^[^#]*' $TEMPLATE_PATH)")
 
     # allow domain
     ONLY_DOMAINS=$(findPattern "domains-include" $TEMPLATE_CODE)
@@ -100,4 +103,4 @@ for COMMON_TEMPLATE in ${PROJECT_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*
 done
 
 # Run nginx with modules
-# nginx -g 'daemon off;'
+nginx -g 'daemon off;'

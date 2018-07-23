@@ -39,7 +39,7 @@ for ENV_FILE in "${ADDR[@]}"; do
 
         while IFS='=' read -r name value; do
             case "$name" in \#*) continue ;; esac
-            if [ ! -z "$name" ]; then
+            if [ ! -z "$name" ] && [ ! -z "$value" ]; then
                 SERVER_ENVS="${SERVER_ENVS} $name"
             fi
         done < $ENV_FILE_FULL_PATH
@@ -68,9 +68,11 @@ export SERVICES=$SERVICES_PATHS
 if [ "$PROJECT_ENV_PATH" != "" ]; then
     PROJECT_ENV_PATH_TMP=$(dirname "$PROJECT_ENV_PATH")
     if [ -d "$PROJECT_ENV_PATH_TMP" ]; then
+        SERVER_ENVS=$(echo "$SERVER_ENVS" | xargs -n1 | sort -u | xargs)
+
         echo -n "" > "${PROJECT_ENV_PATH}"
         for ENV_NAME in $SERVER_ENVS; do
-            echo "$ENV_NAME=${!ENV_NAME}" >> ${PROJECT_ENV_PATH}
+            echo "$ENV_NAME=\"${!ENV_NAME}\"" >> ${PROJECT_ENV_PATH}
         done
     else
         echo "Folder does not exist: $PROJECT_ENV_PATH_TMP"
