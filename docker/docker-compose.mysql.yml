@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+  mysql:
+    hostname: ${MYSQL_HOST}
+    image: mysql:5.7
+    container_name: ${PROJECT_NAME}_mysql
+    ports:
+      - ${MYSQL_PORT}:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - ${PROJECT_DOCKER_STORAGE}/mysql/my.cnf:/etc/mysql/conf.d/mysql.cnf
+      - ${PROJECT_DOCKER_STORAGE}/mysql/storage:/var/lib/mysql
+      - ${PROJECT_DOCKER_STORAGE}/mysql/logs:/var/log/mysql
+    networks:
+      main_x:
+        aliases:
+        - ${MYSQL_HOST}

@@ -4,7 +4,7 @@
 
 # Export environment to OS
 set -a
-. /var/www/html/docker/.env
+. ${PROJECT_ENV_PATH}
 set +a
 
 ENVIRONMENT=$(echo "$PROJECT_ENVIRONMENT" | tr '[:upper:]' '[:lower:]')
@@ -22,7 +22,7 @@ export REDIS_IP=$(getent hosts "$REDIS_HOST" | cut -f 1 -d " ")
 echo $REDIS_IP
 
 # COPY nginx.conf
-NGINX_TEMPLATE_CODE=$(cat /var/www/html/docker/nginx/nginx.conf)
+NGINX_TEMPLATE_CODE=$(cat "${PROJECT_CONTAINER_DIR}"/docker/nginx/nginx.conf)
 NGINX_TEMPLATE_CODE="${NGINX_TEMPLATE_CODE//\$ENVIRONMENT/$PROJECT_ENVIRONMENT}"
 echo "${NGINX_TEMPLATE_CODE}" > /etc/nginx/nginx.conf
 
@@ -30,7 +30,7 @@ echo "${NGINX_TEMPLATE_CODE}" > /etc/nginx/nginx.conf
 find /etc/nginx/conf-dynamic.d -name "*.conf" -type f -delete
 
 # create dynamic nginx configs
-for COMMON_TEMPLATE in /var/www/html/docker/nginx/templates/*.conf; do
+for COMMON_TEMPLATE in ${PROJECT_CONTAINER_DIR}/docker/nginx/templates/*.conf; do
     COMMON_DYNAMIC=/etc/nginx/conf-dynamic.d/$(basename $COMMON_TEMPLATE)
 
     # get templace
@@ -69,8 +69,8 @@ for COMMON_TEMPLATE in /var/www/html/docker/nginx/templates/*.conf; do
         fi
 
         if [[ $CERTIFICATE_DOMAIN != "" ]]; then
-            SSL_KEY=/var/www/html/docker/letsencrypt/${PROJECT_ENVIRONMENT}/live/${CERTIFICATE_DOMAIN}/privkey.pem;
-            SSL_CERT=/var/www/html/docker/letsencrypt/${PROJECT_ENVIRONMENT}/live/${CERTIFICATE_DOMAIN}/fullchain.pem;
+            SSL_KEY=${PROJECT_CONTAINER_DIR}/docker/letsencrypt/${PROJECT_ENVIRONMENT}/live/${CERTIFICATE_DOMAIN}/privkey.pem;
+            SSL_CERT=${PROJECT_CONTAINER_DIR}/docker/letsencrypt/${PROJECT_ENVIRONMENT}/live/${CERTIFICATE_DOMAIN}/fullchain.pem;
 
             if [ -f $SSL_KEY ] && [ -f $SSL_CERT ]; then
                 SSL_DERICTIVE="

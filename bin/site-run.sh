@@ -2,31 +2,13 @@
 
 # run app service
 
-for i in "$@"
-do
-case $i in
-    -e=*|--env-file=*)
-    ENV_FILE=$(realpath "${i#*=}")
-    shift
-    ;;
-    *)
-          # unknown option
-    ;;
-esac
-done
+# get package vendor dir
+VENDOR_DIR=$(dirname $(dirname $(readlink -f "${BASH_SOURCE[0]}")))
 
-if [ ! -f "$ENV_FILE" ]; then
-    echo "Env file does not exist: $ENV_FILE"
-    exit 1;
-fi
-
-# Getting environments for using in current script
-set -a
-. $ENV_FILE
-set +a
+# export environments
+. "${VENDOR_DIR}/helpers/compile-env.sh"
 
 SERVICE=$1
 SERVICE_COMMAND=$2
 
-cd ${DOCKER_FOLDER_NAME} && \
-    docker-compose ${SERVICES} run --rm ${SERVICE} /bin/bash -c "${SERVICE_COMMAND}"
+docker-compose ${SERVICES} run --rm ${SERVICE} /bin/bash -c "${SERVICE_COMMAND}"

@@ -6,11 +6,11 @@
 
 # Getting environments for using in current script
 set -a
-. /var/www/html/docker/.env
+. ${PROJECT_ENV_PATH}
 set +a
 
 # see nginx snippets/letsencrypt-acme-challenge.conf
-CERTIFICATE_WEB_ROOT=/var/www/html/docker/nginx/web
+CERTIFICATE_WEB_ROOT="${PROJECT_DOCKER_STORAGE}/nginx/web"
 
 for i in ${!SSL_DOMAINS[*]}; do
     EMAIL="$(cut -d':' -f1 <<<"$SSL_DOMAINS[$i]")"

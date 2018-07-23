@@ -2,7 +2,7 @@
 
 # Getting environments for using in current script
 set -a
-. /var/www/html/docker/.env
+. ${PROJECT_ENV_PATH}
 set +a
 
 TIME="10"

@@ -2,14 +2,13 @@ version: '2'
 
 services:
   redis:
-    env_file: .env
     image: redis:4
     hostname: ${REDIS_HOST}
     container_name: ${PROJECT_NAME}_redis
     command: ["redis-server", "/usr/local/etc/redis/redis.conf", "--requirepass", "${REDIS_PASSWORD}"]
     volumes:
-      - ${PROJECT_ROOT}/docker/redis/config/redis.conf:/usr/local/etc/redis/redis.conf
-      - ${PROJECT_ROOT}/docker/redis/storage:/data
+      - ${PROJECT_DOCKER_STORAGE}/redis/config/redis.conf:/usr/local/etc/redis/redis.conf
+      - ${PROJECT_DOCKER_STORAGE}/redis/storage:/data
     ports:
       - ${REDIS_PORT}:6379
     networks:
