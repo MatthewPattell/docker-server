@@ -72,7 +72,7 @@ if [ "$PROJECT_ENV_PATH" != "" ]; then
 
         echo -n "" > "${PROJECT_ENV_PATH}"
         for ENV_NAME in $SERVER_ENVS; do
-            echo "$ENV_NAME=\"${!ENV_NAME}\"" >> ${PROJECT_ENV_PATH}
+            echo "$ENV_NAME=${!ENV_NAME}" >> ${PROJECT_ENV_PATH}
         done
     else
         echo "Folder does not exist: $PROJECT_ENV_PATH_TMP"
