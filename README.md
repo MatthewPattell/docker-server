@@ -49,7 +49,8 @@ to the require section of your `composer.json` file.
 7. Open browser and check **sample.io**
     
     
-**LIFEHACKS**  
+**LIFEHACKS** 
+---
 
  - Add static network layout
     1. Create **docker-compose.local.yml** in your docker folder
