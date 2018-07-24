@@ -1,0 +1,9 @@
+.env
+.env-*
+!.env-sample
+!.env-ci
+mysql/storage
+ssh/authorized_keys
+ssh/config
+ssh/*_key
+docker-compose.local.yml

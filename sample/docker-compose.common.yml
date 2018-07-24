@@ -1,0 +1,6 @@
+version: '2'
+
+services:
+  nginx:
+    volumes:
+      - ${PROJECT_ROOT}/docker/nginx/conf-dynamic.d:${PROJECT_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d
