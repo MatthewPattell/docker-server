@@ -37,7 +37,9 @@ __After install package:__
 2. Run: ```composer server init```. This will create a **docker** folder in your project root directory.
 3. Change **root-path** in _docker/nginx/conf-dynamic.d/sample.conf_
 4. Run server: ```composer server up ```
-5. Check nginx container ip and add to hosts file:
+
+**Configure hosts file:**
+1. Check nginx container _IP_ and add to hosts file:
     ```bash
     docker inspect sample_nginx
     ```
@@ -47,34 +49,17 @@ __After install package:__
     ```
     _172.18.0.4 sample.io_ (for example)  
     save and check it.
-6. Open browser and check **sample.io**
+2. Open browser and check **sample.io**
+
+OR see below **static network layer**
     
     
 **LIFEHACKS** 
 ---
 
- - Add static network layer
-    1. Create **docker-compose.local.yml** in your docker folder
-    2. Paste:
-        ```yml
-        version: '2'
-        
-        services:
-          nginx:
-            networks:
-              main_x:
-                ipv4_address: 172.30.0.5
-                
-        networks:
-          main_x:
-            driver: bridge
-            ipam:
-              config:
-                - subnet: 172.30.0.0/24
-                  gateway: 172.30.0.1
-        ```
+ - **Add static network layer**
     3. Change **SERVICES** variable in your local env (docker/.env-local) to:
         ```
-        SERVICES="$SERVICES -f docker/docker-compose.common.yml -f docker/docker-compose.local.yml"
+        SERVICES="$SERVICES -f docker/docker-compose.common.yml -f docker/docker-compose.static-network.yml"
         ```
     4. Run: ```composer server restart``` and check it.

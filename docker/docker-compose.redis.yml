@@ -12,6 +12,6 @@ services:
     ports:
       - ${REDIS_PORT}:6379
     networks:
-      main_x:
+      common:
         aliases:
           - ${REDIS_HOST}

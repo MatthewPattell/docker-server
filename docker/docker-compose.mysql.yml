@@ -17,6 +17,6 @@ services:
       - ${PROJECT_DOCKER_FOLDER}/mysql/storage:/var/lib/mysql
       - ${PROJECT_DOCKER_FOLDER}/mysql/logs:/var/log/mysql
     networks:
-      main_x:
+      common:
         aliases:
         - ${MYSQL_HOST}

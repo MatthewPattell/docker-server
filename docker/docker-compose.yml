@@ -25,7 +25,7 @@ services:
     depends_on:
       - server
     networks:
-      main_x:
+      common:
         aliases:
           - nginx
 
@@ -55,10 +55,10 @@ services:
       - ${PROJECT_DOCKER_FOLDER}/pam/pam.d/cron:/etc/pam.d/cron
     working_dir: ${PROJECT_ROOT_CONTAINER}
     networks:
-      main_x:
+      common:
         aliases:
           - server
 
 networks:
-  main_x:
+  common:
     driver: bridge

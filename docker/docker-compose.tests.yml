@@ -10,6 +10,6 @@ services:
       - nginx
     container_name: ${PROJECT_NAME}_server_test
     networks:
-      main_x:
+      common:
         aliases:
           - server_test

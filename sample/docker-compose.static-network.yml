@@ -1,0 +1,20 @@
+version: '2'
+
+services:
+  nginx:
+    networks:
+      common:
+        ipv4_address: 172.30.0.5
+
+  mysql:
+    networks:
+      common:
+        ipv4_address: 172.30.0.6
+
+networks:
+  common:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/24
+          gateway: 172.30.0.1
