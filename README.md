@@ -70,4 +70,6 @@ OR see below **static network layer**
 - Use environment, extends, overriding between configs
 - Use all environments in docker-compose files
 - Overriding, extends docker-compose files
+- Run container and execute command: ```composer server-run server "ls && top"```
+- Run command in working container: ```composer server-exec server "composer install"```
 - And etc.  
