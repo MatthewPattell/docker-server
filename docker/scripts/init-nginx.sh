@@ -22,7 +22,7 @@ if [ ! -z "$REDIS_HOST" ]; then
 fi
 
 # COPY nginx.conf
-NGINX_TEMPLATE_CODE=$(cat "${PROJECT_DOCKER_FOLDER_CONTAINER}"/nginx/nginx.conf)
+NGINX_TEMPLATE_CODE=$(cat "${PACKAGE_DOCKER_FOLDER_CONTAINER}"/nginx/nginx.conf)
 NGINX_TEMPLATE_CODE="${NGINX_TEMPLATE_CODE//\$ENVIRONMENT/$PROJECT_ENVIRONMENT}"
 echo "${NGINX_TEMPLATE_CODE}" > /etc/nginx/nginx.conf
 
@@ -30,7 +30,7 @@ echo "${NGINX_TEMPLATE_CODE}" > /etc/nginx/nginx.conf
 find /etc/nginx/conf-dynamic.d -name "*.conf" -type f -delete
 
 # create dynamic nginx configs
-for COMMON_TEMPLATE in ${PROJECT_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.conf; do
+for COMMON_TEMPLATE in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.conf; do
     COMMON_DYNAMIC=/etc/nginx/conf-dynamic.d/$(basename $COMMON_TEMPLATE)
 
     # get templace
@@ -41,7 +41,7 @@ for COMMON_TEMPLATE in ${PROJECT_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*
 
     if [ ! -z $TEMPLATE_PATH ]; then
         if [ ! -f $TEMPLATE_PATH ]; then
-            TEMPLATE_PATH="${PROJECT_DOCKER_FOLDER_CONTAINER}/nginx/$TEMPLATE_PATH"
+            TEMPLATE_PATH="${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/$TEMPLATE_PATH"
         fi
 
         # get template code without comments (if "copy template" directive exist)
@@ -85,8 +85,8 @@ for COMMON_TEMPLATE in ${PROJECT_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*
         fi
 
         if [[ $CERTIFICATE_DOMAIN != "" ]]; then
-            SSL_KEY=${PROJECT_DOCKER_FOLDER_CONTAINER}/letsencrypt/${PROJECT_ENVIRONMENT}/live/${CERTIFICATE_DOMAIN}/privkey.pem;
-            SSL_CERT=${PROJECT_DOCKER_FOLDER_CONTAINER}/letsencrypt/${PROJECT_ENVIRONMENT}/live/${CERTIFICATE_DOMAIN}/fullchain.pem;
+            SSL_KEY=${PACKAGE_DOCKER_FOLDER_CONTAINER}/letsencrypt/${PROJECT_ENVIRONMENT}/live/${CERTIFICATE_DOMAIN}/privkey.pem;
+            SSL_CERT=${PACKAGE_DOCKER_FOLDER_CONTAINER}/letsencrypt/${PROJECT_ENVIRONMENT}/live/${CERTIFICATE_DOMAIN}/fullchain.pem;
 
             if [ -f $SSL_KEY ] && [ -f $SSL_CERT ]; then
                 SSL_DERICTIVE="

@@ -24,6 +24,8 @@ ENV_FILES="${VENDOR_DIR}/docker/.env-default,${ENV_FILES}"
 
 # Handle env files
 SERVER_ENVS=""
+SERVER_ENVS_RECOMPILE_ORDER=""
+declare -A SERVER_ENVS_RECOMPILE
 IFS=',' read -ra ADDR <<< "$ENV_FILES"
 for ENV_FILE in "${ADDR[@]}"; do
     ENV_FILE_FULL_PATH=$(readlink -f "$ENV_FILE")
@@ -40,14 +42,29 @@ for ENV_FILE in "${ADDR[@]}"; do
         while IFS='=' read -r name value; do
             case "$name" in \#*) continue ;; esac
             if [ ! -z "$name" ] && [ ! -z "$value" ]; then
-                SERVER_ENVS="${SERVER_ENVS} $name"
+                # Collect the environments, which will be added to result file
+                if [[ $SERVER_ENVS != *" $name"* ]]; then
+                    SERVER_ENVS="${SERVER_ENVS} $name"
+                fi
+
+                # Collect the environments, which will be recompile
+                if [[ $value = *"\${"* ]] && [[ $SERVER_ENVS_RECOMPILE != *" $name"* ]]; then
+                    SERVER_ENVS_RECOMPILE[$name]=$value
+                    SERVER_ENVS_RECOMPILE_ORDER="$SERVER_ENVS_RECOMPILE_ORDER $name"
+                fi
             fi
         done < $ENV_FILE_FULL_PATH
     fi
 done
 
-# generated env path
-export PROJECT_ENV_PATH="${PROJECT_DOCKER_FOLDER}/.env"
+# Recompile environments
+TMP_RECOMPILE_ENVS="${PROJECT_DOCKER_FOLDER}/.env-tmp"
+echo -n "" > $TMP_RECOMPILE_ENVS
+for recompile_env_name in ${SERVER_ENVS_RECOMPILE_ORDER[@]}; do
+    echo "$recompile_env_name=${SERVER_ENVS_RECOMPILE[$recompile_env_name]}" >> $TMP_RECOMPILE_ENVS
+    . $TMP_RECOMPILE_ENVS
+done
+rm $TMP_RECOMPILE_ENVS
 
 # Get realpath docker compose files by default
 SERVICES_PATHS=""
@@ -63,6 +80,9 @@ for SERVICE in $SERVICES; do
 done
 
 export SERVICES=$SERVICES_PATHS
+
+# Generated env path
+export PROJECT_ENV_PATH="${PROJECT_DOCKER_FOLDER}/.env"
 
 # Collect all project environment to result temp env file
 if [ "$PROJECT_ENV_PATH" != "" ]; then

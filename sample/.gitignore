@@ -3,6 +3,9 @@
 !.env-sample
 !.env-ci
 mysql/storage
+letsencrypt
+redis/storage
+*logs*
 ssh/authorized_keys
 ssh/config
 ssh/*_key

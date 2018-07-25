@@ -17,11 +17,11 @@ echo "export PHP_IDE_CONFIG=\"${PHP_IDE_CONFIG}"\" >> ~/.bashrc
 echo 'root:'$SSH_PASSWORD | chpasswd
 while IFS= read -r key; do
     echo $key >> /root/.ssh/authorized_keys
-done < ${PROJECT_DOCKER_FOLDER_CONTAINER}/ssh/authorized_keys
+done < ${PACKAGE_DOCKER_FOLDER_CONTAINER}/ssh/authorized_keys
 
 # Install deploy key and ssh config if exits
-DEPLOY_KEY=${PROJECT_DOCKER_FOLDER_CONTAINER}/ssh/site_deploy_key
-SSH_CONFIG=${PROJECT_DOCKER_FOLDER_CONTAINER}/ssh/config
+DEPLOY_KEY=${PACKAGE_DOCKER_FOLDER_CONTAINER}/ssh/site_deploy_key
+SSH_CONFIG=${PACKAGE_DOCKER_FOLDER_CONTAINER}/ssh/config
 
 if [ -f $DEPLOY_KEY ] && [ -f $SSH_CONFIG ]; then
     cp $DEPLOY_KEY /root/.ssh/site_deploy_key

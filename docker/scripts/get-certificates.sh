@@ -10,7 +10,7 @@ set -a
 set +a
 
 # see nginx snippets/letsencrypt-acme-challenge.conf
-CERTIFICATE_WEB_ROOT="${PROJECT_DOCKER_FOLDER_CONTAINER}/nginx/web"
+CERTIFICATE_WEB_ROOT="${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/web"
 
 for i in ${!SSL_DOMAINS[*]}; do
     EMAIL="$(cut -d':' -f1 <<<"$SSL_DOMAINS[$i]")"
