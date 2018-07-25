@@ -21,10 +21,9 @@ or add
 
 to the require section of your `composer.json` file.
 
-1. Copy **sample** folder from this package dir, to your project root (near composer.json) 
-2. Rename folder to **docker** (optional), and rename .env-sample inside folder to .env-local
-3. Change **root-path** in nginx/conf-dynamic.d/sample.conf
-4. Add scripts to **composer.json**:
+__After install package:__
+
+1. Add scripts to **composer.json**:
     ```json
     ...
     "scripts": {
@@ -34,9 +33,11 @@ to the require section of your `composer.json` file.
     }
     ...
     ```
-    where **"docker/.env-local"** relative path to your local env config.
-5. Run server: ```composer server up ```
-6. Check nginx container ip and add to hosts file:
+    where **"docker/.env-local"** relative path to your local env config (will be created in next step).
+2. Run: ```composer server init```. This will create a **docker** folder in your project root directory.
+3. Change **root-path** in _docker/nginx/conf-dynamic.d/sample.conf_
+4. Run server: ```composer server up ```
+5. Check nginx container ip and add to hosts file:
     ```bash
     docker inspect sample_nginx
     ```
@@ -46,13 +47,13 @@ to the require section of your `composer.json` file.
     ```
     _172.18.0.4 sample.io_ (for example)  
     save and check it.
-7. Open browser and check **sample.io**
+6. Open browser and check **sample.io**
     
     
 **LIFEHACKS** 
 ---
 
- - Add static network layout
+ - Add static network layer
     1. Create **docker-compose.local.yml** in your docker folder
     2. Paste:
         ```yml

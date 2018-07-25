@@ -20,6 +20,20 @@ COMMAND=(docker-compose $SERVICES $ACTION $DETACHED_MODE $OTHER_PARAMS)
 if [ "$ACTION" = "restart" ]; then
     "${COMMAND[@]/restart/down}"
     "${COMMAND[@]/restart/up}" $DEFAULT_DETACHED_MODE
+elif [ "$ACTION" = "init" ]; then
+
+    TARGET_DIR="$VENDOR_PARENT_DIR/docker"
+
+    if [ ! -d "$TARGET_DIR" ]; then
+        cp -r "$VENDOR_DIR/sample" "$TARGET_DIR/"
+        mv "$TARGET_DIR/.env-sample" "$TARGET_DIR/.env-local"
+        echo "Server init success."
+        echo "Change root-path in: $TARGET_DIR/nginx/conf-dynamic.d/sample.conf"
+    else
+        echo "$TARGET_DIR folder already exists"
+    fi
+
+    exit 0;
 else
     "${COMMAND[@]}"
 fi
