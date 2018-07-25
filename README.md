@@ -58,8 +58,8 @@ OR see below **static network layer**
 ---
 
  - **Add static network layer**
-    3. Change **SERVICES** variable in your local env (docker/.env-local) to:
+    1. Change **SERVICES** variable in your local env (docker/.env-local) to:
         ```
         SERVICES="$SERVICES -f docker/docker-compose.common.yml -f docker/docker-compose.static-network.yml"
         ```
-    4. Run: ```composer server restart``` and check it.
+    2. Run: ```composer server restart``` and check it.
