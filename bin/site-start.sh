@@ -4,12 +4,23 @@
 
 # get package vendor dir
 VENDOR_DIR=$(dirname $(dirname $(readlink -f "${BASH_SOURCE[0]}")))
-# Get vendor parent dir
-VENDOR_PARENT_DIR=$(sed -n -e 's/\(^.*\)\(\(\/vendor\).*\)/\1/p' <<< "$VENDOR_DIR")
+
+# export environments
+. "${VENDOR_DIR}/helpers/compile-env.sh"
 
 ACTION=$1
+DETACHED_MODE=$DEFAULT_DETACHED_MODE
 
-if [ "$ACTION" = "init" ]; then
+if [[ "${ACTION}" = "down" || "${ACTION}" = "restart" ]] && [ "$DETACHED_MODE" = "-d" ]; then
+    DETACHED_MODE=""
+fi
+
+COMMAND=(docker-compose $SERVICES $ACTION $DETACHED_MODE $OTHER_PARAMS)
+
+if [ "$ACTION" = "restart" ]; then
+    "${COMMAND[@]/restart/down}"
+    "${COMMAND[@]/restart/up}" $DEFAULT_DETACHED_MODE
+elif [ "$ACTION" = "init" ]; then
 
     TARGET_DIR="$VENDOR_PARENT_DIR/docker"
 
@@ -23,22 +34,6 @@ if [ "$ACTION" = "init" ]; then
     fi
 
     exit 0;
-fi
-
-# export environments
-. "${VENDOR_DIR}/helpers/compile-env.sh"
-
-DETACHED_MODE=$DEFAULT_DETACHED_MODE
-
-if [[ "${ACTION}" = "down" || "${ACTION}" = "restart" ]] && [ "$DETACHED_MODE" = "-d" ]; then
-    DETACHED_MODE=""
-fi
-
-COMMAND=(docker-compose $SERVICES $ACTION $DETACHED_MODE $OTHER_PARAMS)
-
-if [ "$ACTION" = "restart" ]; then
-    "${COMMAND[@]/restart/down}"
-    "${COMMAND[@]/restart/up}" $DEFAULT_DETACHED_MODE
 else
     "${COMMAND[@]}"
 fi

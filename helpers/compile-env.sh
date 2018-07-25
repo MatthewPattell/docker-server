@@ -22,6 +22,11 @@ VENDOR_PARENT_DIR=$(sed -n -e 's/\(^.*\)\(\(\/vendor\).*\)/\1/p' <<< "$VENDOR_DI
 # Add default env to config
 ENV_FILES="${VENDOR_DIR}/docker/.env-default,${ENV_FILES}"
 
+# Detect server init
+if [ "$1" = "init" ]; then
+    return
+fi
+
 # Handle env files
 SERVER_ENVS=""
 SERVER_ENVS_RECOMPILE_ORDER=""
