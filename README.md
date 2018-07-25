@@ -63,6 +63,8 @@ OR see below **static network layer**
         SERVICES="$SERVICES -f docker/docker-compose.common.yml -f docker/docker-compose.static-network.yml"
         ```
     2. Run: ```composer server restart``` and check it.
+- **Update package without composer install and depencies**
+    ```docker run --rm --interactive --volume $PWD:/app composer update --ignore-platform-reqs --no-scripts```
     
 **FEATURES**
 ---
