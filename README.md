@@ -1,6 +1,6 @@
 Universal docker server
 ===========================
-PHP FPM, Nginx  
+Nginx, PHP-FPM, MySql, Redis
 
 Installation
 ------------
@@ -57,9 +57,17 @@ OR see below **static network layer**
 **LIFEHACKS** 
 ---
 
- - **Add static network layer**
+- **Add static network layer**
     1. Change **SERVICES** variable in your local env (docker/.env-local) to:
         ```
         SERVICES="$SERVICES -f docker/docker-compose.common.yml -f docker/docker-compose.static-network.yml"
         ```
     2. Run: ```composer server restart``` and check it.
+    
+**FEATURES**
+---
+- Multiple config: ```vendor/bin/site-start.sh --env-file=docker/.env-dev,docker/.env-local```
+- Use environment, extends, overriding between configs
+- Use all environments in docker-compose files
+- Overriding, extends docker-compose files
+- And etc.  
