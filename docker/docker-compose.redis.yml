@@ -9,8 +9,6 @@ services:
     volumes:
       - ${PACKAGE_DOCKER_FOLDER}/redis/config/redis.conf:/usr/local/etc/redis/redis.conf
       - ${PROJECT_DOCKER_FOLDER}/redis/storage:/data
-    ports:
-      - ${REDIS_PORT}:6379
     networks:
       common:
         aliases:
