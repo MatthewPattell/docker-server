@@ -7,7 +7,7 @@ VENDOR_DIR=$(dirname $(dirname $(readlink -f "${BASH_SOURCE[0]}")))
 
 # export environments
 . "${VENDOR_DIR}/helpers/compile-env.sh"
-exit
+
 ACTION=$1
 DETACHED_MODE=$DEFAULT_DETACHED_MODE
 
