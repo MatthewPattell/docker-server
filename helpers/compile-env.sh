@@ -53,9 +53,12 @@ for ENV_FILE in "${ADDR[@]}"; do
                 fi
 
                 # Collect the environments, which will be recompile
-                if [[ $value = *"\${"* ]] && [[ $SERVER_ENVS_RECOMPILE_ORDER != *" $name"* ]]; then
+                if [[ $value = *"\${"* ]]; then
                     SERVER_ENVS_RECOMPILE[$name]=$value
-                    SERVER_ENVS_RECOMPILE_ORDER="$SERVER_ENVS_RECOMPILE_ORDER $name"
+
+                    if [[ $SERVER_ENVS_RECOMPILE_ORDER != *" $name"* ]]; then
+                        SERVER_ENVS_RECOMPILE_ORDER="$SERVER_ENVS_RECOMPILE_ORDER $name"
+                    fi
                 fi
             fi
         done < $ENV_FILE_FULL_PATH

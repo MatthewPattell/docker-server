@@ -70,6 +70,16 @@ OR see below **static network layer**
 ---
 - Multiple config: ```vendor/bin/site-start.sh --env-file=docker/.env-dev,docker/.env-local```
 - Use environment, extends, overriding between configs
+    ```
+    // Simple usage
+    SERVICES="$SERVICES -f my.yml"
+    
+    // Will be recompiled (bad example)
+    SERVICES="${SERVICES} -f my.yml"
+    
+    // Will be recompiled (good example)
+    SERVICES="${SERVICES_EXTERNAL} -f my.yml"
+    ```
 - Use all environments in docker-compose files
 - Overriding, extends docker-compose files
 - Run container and execute command: ```composer server-run server "ls && top"```
