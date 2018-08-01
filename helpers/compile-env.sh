@@ -66,7 +66,12 @@ for ENV_FILE in "${ADDR[@]}"; do
 done
 
 # Recompile environments
-TMP_RECOMPILE_ENVS="${PROJECT_DOCKER_FOLDER}/.env-tmp"
+if [ ! -z $PROJECT_ENV_PATH_FORCE ]; then
+    TMP_RECOMPILE_ENVS="${PROJECT_ENV_PATH_FORCE}/.env-tmp"
+else
+    TMP_RECOMPILE_ENVS="${PROJECT_DOCKER_FOLDER}/.env-tmp"
+fi
+
 echo -n "" > $TMP_RECOMPILE_ENVS
 for recompile_env_name in ${SERVER_ENVS_RECOMPILE_ORDER[@]}; do
     echo "$recompile_env_name=${SERVER_ENVS_RECOMPILE[$recompile_env_name]}" >> $TMP_RECOMPILE_ENVS
@@ -91,16 +96,21 @@ export SERVICES=$SERVICES_PATHS
 
 # Generated env path
 export PROJECT_ENV_PATH="${PROJECT_DOCKER_FOLDER}/.env"
+ENV_PATH=$PROJECT_ENV_PATH
+
+if [ ! -z $PROJECT_ENV_PATH_FORCE ]; then
+    ENV_PATH="${PROJECT_ENV_PATH_FORCE}/.env-compiled"
+fi
 
 # Collect all project environment to result temp env file
-if [ "$PROJECT_ENV_PATH" != "" ]; then
-    PROJECT_ENV_PATH_TMP=$(dirname "$PROJECT_ENV_PATH")
+if [ "$ENV_PATH" != "" ]; then
+    PROJECT_ENV_PATH_TMP=$(dirname "$ENV_PATH")
     if [ -d "$PROJECT_ENV_PATH_TMP" ]; then
         SERVER_ENVS=$(echo "$SERVER_ENVS" | xargs -n1 | sort -u | xargs)
 
-        echo -n "" > "${PROJECT_ENV_PATH}"
+        echo -n "" > "${ENV_PATH}"
         for ENV_NAME in $SERVER_ENVS; do
-            echo "$ENV_NAME=${!ENV_NAME}" >> ${PROJECT_ENV_PATH}
+            echo "$ENV_NAME=${!ENV_NAME}" >> ${ENV_PATH}
         done
     else
         echo "Folder does not exist: $PROJECT_ENV_PATH_TMP"

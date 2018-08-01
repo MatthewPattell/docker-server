@@ -29,7 +29,10 @@ __After install package:__
     "scripts": {
         "server": "vendor/bin/site-start.sh --env-file=docker/.env-local",
         "server-run": "vendor/bin/site-run.sh --env-file=docker/.env-local",
-        "server-exec": "vendor/bin/site-exec.sh --env-file=docker/.env-local"
+        "server-exec": "vendor/bin/site-exec.sh --env-file=docker/.env-local",
+     
+        (optional)
+        "server-prod": "vendor/bin/site-aws.sh --env-file=docker/.env-prod"
     }
     ...
     ```
@@ -84,4 +87,5 @@ OR see below **static network layer**
 - Overriding, extends docker-compose files
 - Run container and execute command: ```composer server-run server "ls && top"```
 - Run command in working container: ```composer server-exec server "composer install"```
+- AWS create/update "Task Definitions"
 - And etc.  
