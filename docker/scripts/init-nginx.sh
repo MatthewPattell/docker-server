@@ -85,8 +85,8 @@ for COMMON_TEMPLATE in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*
         fi
 
         if [[ $CERTIFICATE_DOMAIN != "" ]]; then
-            SSL_KEY=${PACKAGE_DOCKER_FOLDER_CONTAINER}/letsencrypt/${PROJECT_ENVIRONMENT}/live/${CERTIFICATE_DOMAIN}/privkey.pem;
-            SSL_CERT=${PACKAGE_DOCKER_FOLDER_CONTAINER}/letsencrypt/${PROJECT_ENVIRONMENT}/live/${CERTIFICATE_DOMAIN}/fullchain.pem;
+            SSL_KEY=/etc/letsencrypt/live/${CERTIFICATE_DOMAIN}/privkey.pem;
+            SSL_CERT=/etc/letsencrypt/live/${CERTIFICATE_DOMAIN}/fullchain.pem;
 
             if [ -f $SSL_KEY ] && [ -f $SSL_CERT ]; then
                 SSL_DERICTIVE="
