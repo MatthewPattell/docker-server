@@ -9,6 +9,7 @@ VENDOR_DIR=$(dirname $(dirname $(readlink -f "${BASH_SOURCE[0]}")))
 . "${VENDOR_DIR}/helpers/compile-env.sh"
 
 ACTION="AWS_$(echo "$1" | tr '[:lower:]' '[:upper:]')"
+ACTION="${ACTION[@]/-/_}"
 COMMAND=${!ACTION}
 
 if [ ! -z "$COMMAND" ]; then
