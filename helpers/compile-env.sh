@@ -18,6 +18,8 @@ VENDOR_DIR=$(dirname $(dirname $(readlink -f "${BASH_SOURCE[0]}")))
 
 # Get vendor parent dir
 VENDOR_PARENT_DIR=$(sed -n -e 's/\(^.*\)\(\(\/vendor\).*\)/\1/p' <<< "$VENDOR_DIR")
+# Get vendor common dir
+VENDOR_COMMON_DIR=$(sed -n -e 's/\(^.*\)\(\(\/vendor\).*\)/\2/p' <<< "$VENDOR_DIR")
 
 # Add default env to config
 ENV_FILES="${VENDOR_DIR}/docker/.env-default,${ENV_FILES}"
