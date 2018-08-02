@@ -10,5 +10,5 @@
       "email": "lukomi@mail.ru"
     }
   ],
-  "bin": ["bin/site-start.sh", "bin/site-exec.sh", "bin/site-run.sh"]
+  "bin": ["bin/site-start.sh", "bin/site-exec.sh", "bin/site-run.sh", "bin/site-aws.sh"]
 }
