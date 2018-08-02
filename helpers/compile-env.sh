@@ -112,7 +112,14 @@ if [ "$ENV_PATH" != "" ]; then
 
         echo -n "" > "${ENV_PATH}"
         for ENV_NAME in $SERVER_ENVS; do
-            echo "$ENV_NAME=${!ENV_NAME}" >> ${ENV_PATH}
+            case "${!ENV_NAME}" in
+                *\ * )
+                    echo "$ENV_NAME=\"${!ENV_NAME}\"" >> ${ENV_PATH}
+                ;;
+                *)
+                    echo "$ENV_NAME=${!ENV_NAME}" >> ${ENV_PATH}
+                ;;
+            esac
         done
     else
         echo "Folder does not exist: $PROJECT_ENV_PATH_TMP"
