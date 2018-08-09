@@ -18,7 +18,7 @@ if [ "$2" = "sh" ] || [ "$2" = "/bin/sh" ]; then
 fi
 
 if [ "$COMMAND" != "" ]; then
-    COMMAND="$COMMAND -c $2"
+    COMMAND="-c $COMMAND"
 fi
 
 # @TODO_ tty composer not working :( https://github.com/symfony/symfony/issues/17010
