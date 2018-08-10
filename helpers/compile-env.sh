@@ -116,6 +116,9 @@ if [ "$ENV_PATH" != "" ]; then
                 *\ * )
                     echo "$ENV_NAME=\"${!ENV_NAME}\"" >> ${ENV_PATH}
                 ;;
+                *\=* )
+                    echo "$ENV_NAME=\"${!ENV_NAME}\"" >> ${ENV_PATH}
+                ;;
                 *)
                     echo "$ENV_NAME=${!ENV_NAME}" >> ${ENV_PATH}
                 ;;
