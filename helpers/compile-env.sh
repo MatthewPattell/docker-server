@@ -13,8 +13,27 @@ case $i in
 esac
 done
 
+# Get absolute path from the relative
+realpath() {
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
+
+# Get index element in array if exist or return -1
+indexOf() {
+    element=$1 && shift
+	array=($@)
+    index=$(echo ${array[@]/$element//} | cut -d/ -f1 | wc -w | tr -d ' ')
+    lastIndex=$(($(echo ${#array[@]})-1))
+
+    if (( $index > $lastIndex )); then
+        echo -1;
+    else
+        echo $index
+    fi
+}
+
 # Get package vendor dir
-VENDOR_DIR=$(dirname $(dirname $(readlink -f "${BASH_SOURCE[0]}")))
+VENDOR_DIR=$(dirname $(dirname $(realpath "${BASH_SOURCE[0]}")))
 
 # Get vendor parent dir
 VENDOR_PARENT_DIR=$(sed -n -e 's/\(^.*\)\(\(\/vendor\).*\)/\1/p' <<< "$VENDOR_DIR")
@@ -31,11 +50,11 @@ fi
 
 # Handle env files
 SERVER_ENVS=""
-SERVER_ENVS_RECOMPILE_ORDER=""
-declare -A SERVER_ENVS_RECOMPILE
+SERVER_ENVS_RECOMPILE_NAMES=()
+SERVER_ENVS_RECOMPILE_VALUES=()
 IFS=',' read -ra ADDR <<< "$ENV_FILES"
 for ENV_FILE in "${ADDR[@]}"; do
-    ENV_FILE_FULL_PATH=$(readlink -f "$ENV_FILE")
+    ENV_FILE_FULL_PATH=$(realpath "$ENV_FILE")
 
     if [ ! -f "$ENV_FILE_FULL_PATH" ]; then
         echo "Env file does not exist (skip): $ENV_FILE"
@@ -56,11 +75,13 @@ for ENV_FILE in "${ADDR[@]}"; do
 
                 # Collect the environments, which will be recompile
                 if [[ $value = *"\${"* ]]; then
-                    SERVER_ENVS_RECOMPILE[$name]=$value
-
-                    if [[ $SERVER_ENVS_RECOMPILE_ORDER != *" $name"* ]]; then
-                        SERVER_ENVS_RECOMPILE_ORDER="$SERVER_ENVS_RECOMPILE_ORDER $name"
+                    if [[ ! ${SERVER_ENVS_RECOMPILE_NAMES[@]} =~ " $name " ]]; then
+                        SERVER_ENVS_RECOMPILE_NAMES+=("$name")
                     fi
+
+                    nameIndex=$(indexOf $name ${SERVER_ENVS_RECOMPILE_NAMES[@]})
+
+                    SERVER_ENVS_RECOMPILE_VALUES[$nameIndex]=$value
                 fi
             fi
         done < $ENV_FILE_FULL_PATH
@@ -75,8 +96,9 @@ else
 fi
 
 echo -n "" > $TMP_RECOMPILE_ENVS
-for recompile_env_name in ${SERVER_ENVS_RECOMPILE_ORDER[@]}; do
-    echo "$recompile_env_name=${SERVER_ENVS_RECOMPILE[$recompile_env_name]}" >> $TMP_RECOMPILE_ENVS
+for recompile_env_name_index in ${!SERVER_ENVS_RECOMPILE_NAMES[@]}; do
+    recompile_env_name=${SERVER_ENVS_RECOMPILE_NAMES[$recompile_env_name_index]}
+    echo "$recompile_env_name=${SERVER_ENVS_RECOMPILE_VALUES[$recompile_env_name_index]}" >> $TMP_RECOMPILE_ENVS
     . $TMP_RECOMPILE_ENVS
 done
 rm $TMP_RECOMPILE_ENVS
@@ -87,9 +109,9 @@ SERVICES_PATHS=""
 for SERVICE in $SERVICES; do
     if [ "${SERVICE: -3}" = "yml" ]; then
         if [ "${SERVICE:0:2}" = "!!" ]; then
-            SERVICES_PATHS="${SERVICES_PATHS} -f $(readlink -f "${VENDOR_DIR}/docker/${SERVICE: 2}")"
+            SERVICES_PATHS="${SERVICES_PATHS} -f $(realpath "${VENDOR_DIR}/docker/${SERVICE: 2}")"
         else
-            SERVICES_PATHS="${SERVICES_PATHS} -f $(readlink -f "$SERVICE")"
+            SERVICES_PATHS="${SERVICES_PATHS} -f $(realpath "$SERVICE")"
         fi
     fi
 done
