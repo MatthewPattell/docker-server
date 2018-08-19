@@ -2,10 +2,18 @@
 
 [ "$HOST_NGINX_PROXIES" != "yes" ] && return
 
+ACTION=$1
+
 # Do not need to create/recreate proxies
-[ "$1" = "init" ] && return
+[ "$ACTION" = "init" ] && return
 
 NGINX_CONF_PATH="${HOST_NGINX_CONF_DIR}/universal-${PROJECT_NAME}.conf"
+
+if [[ "$ACTION" = "down" && "$HOST_NGINX_KEEP_CONF" = "no" ]]; then
+    # Delete previous config if exist
+    [ -e $NGINX_CONF_PATH ] && rm $NGINX_CONF_PATH
+    return
+fi
 
 CURRENT_DIR="${BASH_SOURCE%/*}"
 . "$CURRENT_DIR/functions/domains.sh"
@@ -19,11 +27,10 @@ NGINX_TEMPLATE_CODE="${NGINX_TEMPLATE_CODE//\$PORT/$NGINX_PROXY_PORT}"
 NGINX_TEMPLATE_CODE="${NGINX_TEMPLATE_CODE//\$DOMAINS/$NGINX_DOMAIN_PROXIES}"
 
 if [[ ! -f "$NGINX_CONF_PATH" ]] || [[ $(< $NGINX_CONF_PATH) != "$NGINX_TEMPLATE_CODE" ]]; then
-    # Delete previous config if exist
-    [ -e $NGINX_CONF_PATH ] && rm $NGINX_CONF_PATH
     # Create proxy config
     echo "$NGINX_TEMPLATE_CODE" > $NGINX_CONF_PATH
     # Restart host nginx
     echo "Updated $NGINX_CONF_PATH..."
+    echo "Restarting nginx server..."
     eval "${HOST_NGINX_RESTART_COMMAND[@]}"
 fi

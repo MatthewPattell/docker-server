@@ -13,6 +13,7 @@ case $i in
 esac
 done
 
+ACTION=$1
 CURRENT_DIR="${BASH_SOURCE%/*}"
 source "$CURRENT_DIR/functions/base.sh"
 
@@ -28,9 +29,7 @@ VENDOR_COMMON_DIR=$(sed -n -e 's/\(^.*\)\(\(\/vendor\).*\)/\2/p' <<< "$VENDOR_DI
 ENV_FILES="${VENDOR_DIR}/docker/.env-default,${ENV_FILES}"
 
 # Detect server init
-if [ "$1" = "init" ]; then
-    return
-fi
+[ "$ACTION" = "init" ] && return
 
 # Handle env files
 SERVER_ENVS=""
@@ -108,6 +107,17 @@ ENV_PATH=$PROJECT_ENV_PATH
 
 if [ ! -z $PROJECT_ENV_PATH_FORCE ]; then
     ENV_PATH="${PROJECT_ENV_PATH_FORCE}/.env-compiled"
+fi
+
+# if action = down, keep and export old environments
+if [ "$ACTION" = "down" ]; then
+    if [ -f "$PROJECT_ENV_PATH" ]; then
+        set -a
+        . $PROJECT_ENV_PATH
+        set +a
+    fi
+
+    return
 fi
 
 # Collect all project environment to result temp env file
