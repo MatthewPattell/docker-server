@@ -13,27 +13,11 @@ case $i in
 esac
 done
 
-# Get absolute path from the relative
-realpath() {
-    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
-}
-
-# Get index element in array if exist or return -1
-indexOf() {
-    element=$1 && shift
-	array=($@)
-    index=$(echo ${array[@]/$element//} | cut -d/ -f1 | wc -w | tr -d ' ')
-    lastIndex=$(($(echo ${#array[@]})-1))
-
-    if (( $index > $lastIndex )); then
-        echo -1;
-    else
-        echo $index
-    fi
-}
+CURRENT_DIR="${BASH_SOURCE%/*}"
+source "$CURRENT_DIR/functions/base.sh"
 
 # Get package vendor dir
-VENDOR_DIR=$(dirname $(dirname $(realpath "${BASH_SOURCE[0]}")))
+VENDOR_DIR=$(dirname $CURRENT_DIR)
 
 # Get vendor parent dir
 VENDOR_PARENT_DIR=$(sed -n -e 's/\(^.*\)\(\(\/vendor\).*\)/\1/p' <<< "$VENDOR_DIR")
