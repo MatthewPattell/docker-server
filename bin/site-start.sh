@@ -3,13 +3,11 @@
 # up/down app
 
 function getVendorPath() {
-  (
   package=$(readlink $1)
   package=$(dirname $(dirname "${package//.}"))
   cd $(dirname $1)
   vendor=$(dirname $(dirname "$PWD/$(basename $1)"))
   echo "$vendor$package"
-  )
 }
 
 # get package vendor dir
@@ -28,7 +26,11 @@ fi
 COMMAND=(docker-compose $SERVICES $ACTION $DETACHED_MODE $OTHER_PARAMS)
 
 if [ "$ACTION" = "restart" ]; then
+    # Stop
     "${COMMAND[@]/restart/down}"
+    # Recompile/reexport env
+    . "${VENDOR_DIR}/helpers/compile-env.sh" "up"
+    # Run
     "${COMMAND[@]/restart/up}" $DEFAULT_DETACHED_MODE
 elif [ "$ACTION" = "init" ]; then
 
@@ -49,8 +51,8 @@ else
     "${COMMAND[@]}"
 fi
 
-# Create/delete nginx proxies configs for host
-. "${VENDOR_DIR}/helpers/create-nginx-proxy.sh" "$ACTION"
-
 # Auto update hosts file for host
 . "${VENDOR_DIR}/helpers/update-hosts.sh" "$ACTION"
+
+# Create/delete nginx proxies configs for host
+. "${VENDOR_DIR}/helpers/create-nginx-proxy.sh" "$ACTION"

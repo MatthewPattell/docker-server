@@ -110,7 +110,7 @@ if [ ! -z $PROJECT_ENV_PATH_FORCE ]; then
 fi
 
 # if action = down, keep and export old environments
-if [ "$ACTION" = "down" ]; then
+if [ "$ACTION" = "down" ] || [ "$ACTION" = "restart" ]; then
     if [ -f "$PROJECT_ENV_PATH" ]; then
         set -a
         . $PROJECT_ENV_PATH

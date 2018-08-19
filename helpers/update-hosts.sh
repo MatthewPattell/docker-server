@@ -9,6 +9,7 @@ ACTION=$1
 
 CURRENT_DIR="${BASH_SOURCE%/*}"
 . "$CURRENT_DIR/functions/domains.sh"
+. "$CURRENT_DIR/functions/proxy-ip.sh"
 
 HOSTS_FILE=$(cat $HOST_ETC_HOST_PATH)
 HOSTS_ADDED_DOMAINS=$(dockerDomains)
@@ -18,12 +19,10 @@ HOST_END_SECTION="# ${PROJECT_NAME}-uds-end"
 HOSTS_ADDED=""
 
 if [[ "$ACTION" != "down" ]]; then
-    if [ -z "$HOST_ETC_HOSTS_IP" ]; then
-        CONTAINER_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "${PROJECT_NAME}_nginx")
-    fi
+    export HOST_ETC_HOSTS_IP=$(nginxProxyIp)
 
     # Generate unique section for hosts file
-    HOSTS_ADDED="$HOST_NEWLINE$HOST_BEGIN_SECTION$HOST_NEWLINE$CONTAINER_IP $HOSTS_ADDED_DOMAINS$HOST_NEWLINE$HOST_END_SECTION"
+    HOSTS_ADDED="$HOST_NEWLINE$HOST_BEGIN_SECTION$HOST_NEWLINE$HOST_ETC_HOSTS_IP $HOSTS_ADDED_DOMAINS$HOST_NEWLINE$HOST_END_SECTION"
 fi
 
 # Check if hosts added change
