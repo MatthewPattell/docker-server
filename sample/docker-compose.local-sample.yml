@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+  nginx:
+    ports:
+    - ${SERVER_HTTP_PORT}
+
+  mysql:
+    ports:
+    - ${MYSQL_PORT}
