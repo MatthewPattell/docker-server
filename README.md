@@ -31,7 +31,7 @@ to the require section of your `composer.json` file.
         "server-run": "vendor/bin/site-run.sh --env-file=docker/.env-local",
         "server-exec": "vendor/bin/site-exec.sh --env-file=docker/.env-local",
      
-        (optional)
+        // (optional)
         "server-prod": "vendor/bin/site-aws.sh --env-file=docker/.env-prod"
     }
     ...
