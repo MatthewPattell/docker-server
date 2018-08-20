@@ -11,7 +11,10 @@ NGINX_CONF_PATH="${HOST_NGINX_CONF_DIR}/universal-${PROJECT_NAME}.conf"
 
 if [[ "$ACTION" = "down" && "$HOST_NGINX_KEEP_CONF" = "no" ]]; then
     # Delete previous config if exist
-    [ -e $NGINX_CONF_PATH ] && rm $NGINX_CONF_PATH
+    if [ -e $NGINX_CONF_PATH ]; then
+        rm $NGINX_CONF_PATH
+    fi
+
     return
 fi
 

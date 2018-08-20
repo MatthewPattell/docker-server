@@ -2,7 +2,7 @@
   "name": "matthew-p/docker-server",
   "description": "Universal docker server, Nginx, PHP-FPM, MySql, Redis",
   "type": "package",
-  "keywords": ["docker","server","php","fpm","nginx","mysql","redis","docker-compose"],
+  "keywords": ["docker","server","php","fpm","nginx","mysql","redis","docker-compose","universal","dynamic"],
   "license": "BSD-3-Clause",
   "authors": [
     {
