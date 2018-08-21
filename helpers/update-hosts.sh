@@ -21,8 +21,10 @@ HOSTS_ADDED=""
 if [[ "$ACTION" != "down" ]]; then
     export HOST_ETC_HOSTS_IP=$(nginxProxyIp)
 
-    # Generate unique section for hosts file
-    HOSTS_ADDED="$HOST_NEWLINE$HOST_BEGIN_SECTION$HOST_NEWLINE$HOST_ETC_HOSTS_IP $HOSTS_ADDED_DOMAINS$HOST_NEWLINE$HOST_END_SECTION"
+    if [ "$HOST_ETC_HOSTS_IP" != "" ]; then
+        # Generate unique section for hosts file
+        HOSTS_ADDED="$HOST_NEWLINE$HOST_BEGIN_SECTION$HOST_NEWLINE$HOST_ETC_HOSTS_IP $HOSTS_ADDED_DOMAINS$HOST_NEWLINE$HOST_END_SECTION"
+    fi
 fi
 
 # Check if hosts added change
