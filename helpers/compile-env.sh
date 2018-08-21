@@ -32,8 +32,8 @@ ENV_FILES="${VENDOR_DIR}/docker/.env-default,${ENV_FILES}"
 [ "$ACTION" = "init" ] && return
 
 # Handle env files
-SERVER_ENVS=""
-SERVER_ENVS_RECOMPILE_NAMES=()
+SERVER_ENVS=(" ")
+SERVER_ENVS_RECOMPILE_NAMES=(" ")
 SERVER_ENVS_RECOMPILE_VALUES=()
 IFS=',' read -ra ADDR <<< "$ENV_FILES"
 for ENV_FILE in "${ADDR[@]}"; do
@@ -52,8 +52,8 @@ for ENV_FILE in "${ADDR[@]}"; do
             case "$name" in \#*) continue ;; esac
             if [ ! -z "$name" ] && [ ! -z "$value" ]; then
                 # Collect the environments, which will be added to result file
-                if [[ $SERVER_ENVS != *" $name"* ]]; then
-                    SERVER_ENVS="${SERVER_ENVS} $name"
+                if [[ ! ${SERVER_ENVS[@]} =~ " $name " ]]; then
+                    SERVER_ENVS+=("$name")
                 fi
 
                 # Collect the environments, which will be recompile
@@ -71,19 +71,25 @@ for ENV_FILE in "${ADDR[@]}"; do
     fi
 done
 
-# Recompile environments
+# Remove first space (empty element)
+SERVER_ENVS=("${SERVER_ENVS[@]:1}")
+SERVER_ENVS_RECOMPILE_NAMES=("${SERVER_ENVS_RECOMPILE_NAMES[@]:1}")
+
+# Recompile environments temp file
 if [ ! -z $PROJECT_ENV_PATH_FORCE ]; then
     TMP_RECOMPILE_ENVS="${PROJECT_ENV_PATH_FORCE}/.env-tmp"
 else
     TMP_RECOMPILE_ENVS="${PROJECT_DOCKER_FOLDER}/.env-tmp"
 fi
 
+# Echo recompile envs to temp file
 echo -n "" > $TMP_RECOMPILE_ENVS
 for recompile_env_name_index in ${!SERVER_ENVS_RECOMPILE_NAMES[@]}; do
     recompile_env_name=${SERVER_ENVS_RECOMPILE_NAMES[$recompile_env_name_index]}
     echo "$recompile_env_name=${SERVER_ENVS_RECOMPILE_VALUES[$recompile_env_name_index]}" >> $TMP_RECOMPILE_ENVS
-    . $TMP_RECOMPILE_ENVS
 done
+# Recompile && remove tmp file
+. "$TMP_RECOMPILE_ENVS"
 rm $TMP_RECOMPILE_ENVS
 
 # Get realpath docker compose files by default
@@ -124,10 +130,11 @@ fi
 if [ "$ENV_PATH" != "" ]; then
     PROJECT_ENV_PATH_TMP=$(dirname "$ENV_PATH")
     if [ -d "$PROJECT_ENV_PATH_TMP" ]; then
-        SERVER_ENVS=$(echo "$SERVER_ENVS" | xargs -n1 | sort -u | xargs)
+        IFS=$'\n' SERVER_ENVS=($(sort <<<"${SERVER_ENVS[*]}"))
+        unset IFS
 
         echo -n "" > "${ENV_PATH}"
-        for ENV_NAME in $SERVER_ENVS; do
+        for ENV_NAME in ${SERVER_ENVS[@]}; do
             case "${!ENV_NAME}" in
                 *\ * )
                     echo "$ENV_NAME=\"${!ENV_NAME}\"" >> ${ENV_PATH}
