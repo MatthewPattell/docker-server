@@ -19,7 +19,7 @@ VENDOR_DIR=$(getVendorPath "${BASH_SOURCE[0]}")
 ACTION=$1
 DETACHED_MODE=$DEFAULT_DETACHED_MODE
 
-if [[ "${ACTION}" = "down" || "${ACTION}" = "restart" ]] && [ "$DETACHED_MODE" = "-d" ]; then
+if [[ "${ACTION}" != "up" ]] && [ "$DETACHED_MODE" = "-d" ]; then
     DETACHED_MODE=""
 fi
 
@@ -51,8 +51,10 @@ else
     "${COMMAND[@]}"
 fi
 
-# Auto update hosts file for host
-. "${VENDOR_DIR}/helpers/update-hosts.sh" "$ACTION"
+if [ "$ACTION" = "up" ] || [ "$ACTION" = "down" ] || [ "$ACTION" = "restart" ]; then
+    # Auto update hosts file for host
+    . "${VENDOR_DIR}/helpers/update-hosts.sh" "$ACTION"
 
-# Create/delete nginx proxies configs for host
-. "${VENDOR_DIR}/helpers/create-nginx-proxy.sh" "$ACTION"
+    # Create/delete nginx proxies configs for host
+    . "${VENDOR_DIR}/helpers/create-nginx-proxy.sh" "$ACTION"
+fi

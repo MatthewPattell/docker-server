@@ -46,8 +46,9 @@ to the require section of your `composer.json` file.
  - [Linux](docs/LINUX.md)
  - [Mac OS](docs/MACOS.md)
  
-## Environments
+## Environments && Commands
  - [See all available environments](docs/ENVIRONMENTS.md)
+ - [See console commands](docs/COMMANDS.md)
 
 **FEATURES**
 ---
