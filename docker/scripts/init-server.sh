@@ -15,13 +15,18 @@ echo "export PHP_IDE_CONFIG=\"${PHP_IDE_CONFIG}"\" >> ~/.bashrc
 
 # Set ssh access
 echo 'root:'$SSH_PASSWORD | chpasswd
-while IFS= read -r key; do
-    echo $key >> /root/.ssh/authorized_keys
-done < ${PACKAGE_DOCKER_FOLDER_CONTAINER}/ssh/authorized_keys
+
+ACCESS_KEYS_FILE=${PACKAGE_DOCKER_FOLDER_CONTAINER}/ssh/files/authorized_keys
+
+if [ -f $ACCESS_KEYS_FILE ]; then
+    while IFS= read -r key; do
+        echo $key >> /root/.ssh/authorized_keys
+    done < $ACCESS_KEYS_FILE
+fi
 
 # Install deploy key and ssh config if exits
-DEPLOY_KEY=${PACKAGE_DOCKER_FOLDER_CONTAINER}/ssh/site_deploy_key
-SSH_CONFIG=${PACKAGE_DOCKER_FOLDER_CONTAINER}/ssh/config
+DEPLOY_KEY=${PACKAGE_DOCKER_FOLDER_CONTAINER}/ssh/files/site_deploy_key
+SSH_CONFIG=${PACKAGE_DOCKER_FOLDER_CONTAINER}/ssh/files/config
 
 if [ -f $DEPLOY_KEY ] && [ -f $SSH_CONFIG ]; then
     cp $DEPLOY_KEY /root/.ssh/site_deploy_key
@@ -32,7 +37,9 @@ if [ -f $DEPLOY_KEY ] && [ -f $SSH_CONFIG ]; then
 fi
 
 # Config composer
-composer config -g github-oauth.github.com $GIT_AUTHTOKEN
+if [ ! -z $GIT_AUTHTOKEN ]; then
+    composer config -g github-oauth.github.com $GIT_AUTHTOKEN
+fi
 
 if [ $RUN_SERVER_COMPOSER == "1" ]; then
     composer global require "fxp/composer-asset-plugin": "^1.4.2"
