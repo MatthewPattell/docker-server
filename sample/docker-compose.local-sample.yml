@@ -3,8 +3,8 @@ version: '2'
 services:
   nginx:
     ports:
-    - ${SERVER_HTTP_PORT}
+    - ${SERVER_HTTP_PORT}:80
 
   mysql:
     ports:
-    - ${MYSQL_PORT}
+    - ${MYSQL_PORT}:3306
