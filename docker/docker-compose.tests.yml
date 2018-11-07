@@ -8,7 +8,7 @@ services:
     depends_on:
       - server
       - nginx
-    container_name: ${PROJECT_NAME}_server_test
+    container_name: ${COMPOSE_PROJECT_NAME}_server_test
     networks:
       common:
         aliases:

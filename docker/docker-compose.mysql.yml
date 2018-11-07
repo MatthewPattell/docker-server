@@ -4,7 +4,7 @@ services:
   mysql:
     hostname: ${MYSQL_HOST}
     image: mysql:5.7
-    container_name: ${PROJECT_NAME}_mysql
+    container_name: ${COMPOSE_PROJECT_NAME}_mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}

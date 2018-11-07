@@ -3,7 +3,7 @@ version: '2'
 services:
   nginx:
     image: ${NGINX_REPOSITORY}
-    container_name: ${PROJECT_NAME}_nginx
+    container_name: ${COMPOSE_PROJECT_NAME}_nginx
     hostname: nginx
     environment:
       ENV_PATH: ${PROJECT_DOCKER_FOLDER_CONTAINER}/.env
@@ -31,7 +31,7 @@ services:
   server:
     hostname: server
     image: ${SERVER_REPOSITORY}
-    container_name: ${PROJECT_NAME}_server
+    container_name: ${COMPOSE_PROJECT_NAME}_server
     expose:
       - ${DEBUG_PORT}
     environment:
