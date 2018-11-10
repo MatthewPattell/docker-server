@@ -18,9 +18,6 @@ services:
       - ${PACKAGE_DOCKER_FOLDER}/nginx/lua:/etc/nginx/lua
       - ${PACKAGE_DOCKER_FOLDER}/nginx/snippets:/etc/nginx/snippets
       - ${PROJECT_DOCKER_FOLDER}/nginx/logs:/var/log/nginx
-      - ${PACKAGE_DOCKER_FOLDER}/supervisord/supervisord.conf:/etc/supervisor/supervisord.conf
-      - ${PROJECT_DOCKER_FOLDER}/supervisord/nginx/logs:/var/log/supervisord
-      - ${PACKAGE_DOCKER_FOLDER}/supervisord/nginx/services:/etc/supervisor/conf.d
     depends_on:
       - server
     networks:
