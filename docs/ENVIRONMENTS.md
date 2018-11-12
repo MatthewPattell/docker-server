@@ -25,7 +25,7 @@ Property | Values | Description
 ## <a id="project-envs"></a>Project env (service: all)
 Property | Values | Description
 ---------|--------|------------
-`PROJECT_ENVIRONMENT` | `yes`/`no` | Project environment: Include different nginx ssl certificates (letsencrypt), toggle php xdebug, nginx cache control, rewrite to https 
+`PROJECT_ENVIRONMENT` | `DEV`/`PROD` | Project environment: Include different nginx ssl certificates (letsencrypt), toggle php xdebug, nginx cache control, rewrite to https 
 `PROJECT_NAME` | `(string)` | Unique project name
 `COMPOSE_PROJECT_NAME` | `(string)` `Default: $PROJECT_NAME` | Docker compose project name. Is is recommended to be equal `PROJECT_NAME`. [see more](https://docs.docker.com/compose/reference/envvars/#compose_project_name)
 `PROJECT_ROOT_CONTAINER` | `(string)` `Default: /var/www/html` | Project root, inside server container. It is not recommended to change

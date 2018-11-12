@@ -4,7 +4,7 @@ services:
   redis:
     image: redis:4
     hostname: ${REDIS_HOST}
-    container_name: ${PROJECT_NAME}_redis
+    container_name: ${COMPOSE_PROJECT_NAME}_redis
     command: ["redis-server", "/usr/local/etc/redis/redis.conf", "--requirepass", "${REDIS_PASSWORD}"]
     volumes:
       - ${PACKAGE_DOCKER_FOLDER}/redis/config/redis.conf:/usr/local/etc/redis/redis.conf

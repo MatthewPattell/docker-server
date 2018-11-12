@@ -45,7 +45,7 @@ for COMMON_TEMPLATE in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*
         fi
 
         # get template code without comments (if "copy template" directive exist)
-        TEMPLATE_CODE=$(echo -e "$TEMPLATE_CODE \n\n $(grep -o '^[^#]*' $TEMPLATE_PATH)")
+        TEMPLATE_CODE=$(echo -e "$TEMPLATE_CODE \n\n$(grep -o '^[^#]*' $TEMPLATE_PATH)")
     fi
 
     # allow domain
