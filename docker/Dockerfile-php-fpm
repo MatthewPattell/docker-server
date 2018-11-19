@@ -24,7 +24,9 @@ RUN apt-get update -y --fix-missing \
             php7.1-gd php7.1-gmp php-imagick \
             php7.1-imap php7.1-interbase \
             php7.1-intl php7.1-json php7.1-ldap \
-            php7.1-mbstring php7.1-mcrypt \
+            php7.1-mbstring \
+            # TODO: remove mcrypt as it removed from 7.2.
+            php7.1-mcrypt \
             php7.1-mysql php7.1-odbc php7.1-pgsql php7.1-sqlite3 \
             php7.1-opcache php7.1-pspell php7.1-readline \
             php7.1-recode php7.1-snmp php7.1-soap \
