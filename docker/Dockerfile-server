@@ -1,4 +1,4 @@
-FROM matthewpatell/universal-docker-php-fpm:3.0
+FROM matthewpatell/universal-docker-php-fpm:3.5
 
 # Utils
 RUN apt-get update -y --fix-missing \
@@ -7,33 +7,33 @@ RUN apt-get update -y --fix-missing \
             nano vim \
             cron git rsyslog \
     # Fix terminal
-    && echo "export TERM=xterm mc" >> ~/.bashrc
-
-# Install ssl cerbot
-RUN apt-get install -y software-properties-common \
+    && echo "export TERM=xterm mc" >> ~/.bashrc \
+    \
+    # Install ssl cerbot
+    && apt-get install -y software-properties-common \
     && add-apt-repository ppa:certbot/certbot \
     && apt-get update \
     && apt-get install -y python-certbot-apache \
-    && apt-get remove -y software-properties-common
-
-# install sshd
-RUN apt-get install -y openssh-server openssh-client passwd \
+    && apt-get remove -y software-properties-common \
+    \
+    # install sshd
+    && apt-get install -y openssh-server openssh-client passwd \
     && mkdir -p /var/run/sshd \
     #RUN ssh-keygen -q -N "" -t dsa -f /etc/ssh/ssh_host_dsa_key && ssh-keygen -q -N "" -t rsa -f /etc/ssh/ssh_host_rsa_key
     && sed -ri 's/PermitRootLogin without-password/PermitRootLogin yes/g' /etc/ssh/sshd_config \
     # Put your own public key at id_rsa.pub for key-based login.
     && mkdir -p /root/.ssh && chmod 700 /root/.ssh \
-    && touch /root/.ssh/authorized_keys
-
-# Install composer
-RUN curl -sS https://getcomposer.org/installer -o composer-setup.php \
-    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer
-
-# MySQL client
-RUN apt-get install -y mysql-client-5.7
-
-# Install supervisord
-RUN apt-get install -y supervisor \
+    && touch /root/.ssh/authorized_keys \
+    \
+    # Install composer
+    && curl -sS https://getcomposer.org/installer -o composer-setup.php \
+    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+    \
+    # MySQL client
+    && apt-get install -y mysql-client-5.7 \
+    \
+    # Install supervisord
+    && apt-get install -y supervisor \
     && mkdir -p /var/log/supervisord
 
 CMD ["supervisord", "-n"]
