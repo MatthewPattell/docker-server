@@ -1,8 +1,8 @@
-FROM alpine:3.7
+FROM alpine:3.8
 
 MAINTAINER Mathew Patell <likomi@mail.ru>
 
-ENV NGINX_VERSION 1.13.10
+ENV NGINX_VERSION 1.15.7
 
 ENV DEVEL_KIT_MODULE_VERSION 0.3.0
 ENV LUA_MODULE_VERSION 0.10.12rc2
@@ -59,6 +59,7 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
         --with-http_v2_module \
         --add-module=/usr/src/ngx_devel_kit-$DEVEL_KIT_MODULE_VERSION \
         --add-module=/usr/src/lua-nginx-module-$LUA_MODULE_VERSION \
+        --add-module=/tmp/ngx_brotli \
     " \
     && addgroup -S nginx \
     && adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
@@ -71,17 +72,19 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
         zlib-dev \
         linux-headers \
         curl \
-        gnupg \
+        gnupg1 \
         libxslt-dev \
         gd-dev \
         geoip-dev \
         luajit-dev \
         perl-dev \
+        git \
     && curl -fSL https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz -o nginx.tar.gz \
     && curl -fSL https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz.asc  -o nginx.tar.gz.asc \
     && curl -fSL https://github.com/simpl/ngx_devel_kit/archive/v$DEVEL_KIT_MODULE_VERSION.tar.gz -o ndk.tar.gz \
     && curl -fSL https://github.com/openresty/lua-nginx-module/archive/v$LUA_MODULE_VERSION.tar.gz -o lua.tar.gz \
     && curl -fSL https://github.com/openresty/lua-resty-redis/archive/v$LUA_REDIS_VERSION.tar.gz -o lua_redis.tar.gz \
+    && git clone https://github.com/google/ngx_brotli.git /tmp/ngx_brotli \
     && export GNUPGHOME="$(mktemp -d)" \
     && found=''; \
     for server in \
@@ -103,6 +106,8 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
     && tar -zxC /usr/src -f lua.tar.gz \
     && tar -xzvf lua_redis.tar.gz -C /etc/nginx/lua_lib --strip-components=2 lua-resty-redis-$LUA_REDIS_VERSION/lib/resty/redis.lua \
     && rm nginx.tar.gz ndk.tar.gz lua.tar.gz lua_redis.tar.gz \
+    && cd /tmp/ngx_brotli \
+    && git submodule update --init \
     && cd /usr/src/nginx-$NGINX_VERSION \
     && ./configure $CONFIG --with-debug \
     && make -j$(getconf _NPROCESSORS_ONLN) \
@@ -128,6 +133,7 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
     && strip /usr/sbin/nginx* \
     && strip /usr/lib/nginx/modules/*.so \
     && rm -rf /usr/src/nginx-$NGINX_VERSION \
+    && rm -rf /tmp/ngx_brotli \
     \
     # Bring in gettext so we can get `envsubst`, then throw
     # the rest away. To do this, we need to install `gettext`
@@ -153,15 +159,13 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
     \
     # forward request and error logs to docker log collector
     && ln -sf /dev/stdout /var/log/nginx/access.log \
-    && ln -sf /dev/stderr /var/log/nginx/error.log
-
-# install phyton
-RUN apk add --update perl
-
-# install mc
-RUN apk add mc
-
-# dynamic configs
-RUN mkdir /etc/nginx/conf-dynamic.d
+    && ln -sf /dev/stderr /var/log/nginx/error.log \
+    \
+    # install perl
+    # NOTE: needed in init script
+    && apk add --no-cache perl \
+    \
+    # dynamic configs
+    && mkdir /etc/nginx/conf-dynamic.d
 
 ENTRYPOINT ["/scripts/init-nginx.sh"]
