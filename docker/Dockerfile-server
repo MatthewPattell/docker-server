@@ -1,4 +1,4 @@
-FROM registry.kakadu.space/web/mypets:3.6-php-fpm
+FROM matthewpatell/universal-docker-php-fpm:3.6
 
 # Utils
 RUN apt-get update -y --fix-missing \
