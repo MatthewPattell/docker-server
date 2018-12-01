@@ -5,8 +5,6 @@ MAINTAINER Mathew Patell <likomi@mail.ru>
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update -y --fix-missing \
-    # Utils
-    && apt-get install -y apt-utils wget curl zip unzip \
     # Images utils
     && apt-get install -y libjpeg-progs jpegoptim pngquant librsvg2-2 \
     # PHP repository
@@ -36,7 +34,7 @@ RUN apt-get update -y --fix-missing \
     && printf "\n" | pecl install yaml-2.0.0 \
     && echo "extension=yaml.so" >> /etc/php/7.1/mods-available/yaml.ini \
     && phpenmod yaml \
-    # Cleanup
+    # Cleaup
     && apt-get remove -y gnupg \
     && apt-get -y autoremove && apt-get autoclean
 
