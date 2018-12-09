@@ -59,7 +59,7 @@ for COMMON_TEMPLATE in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*
     echo "" > $COMMON_DYNAMIC
 
     # if empty domains, remove config
-    if [[ -z $ONLY_DOMAINS ]]; then
+    if [ -z "$ONLY_DOMAINS" ]; then
         rm $COMMON_DYNAMIC
     fi
 
@@ -80,11 +80,11 @@ for COMMON_TEMPLATE in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*
         CERTIFICATE_DOMAIN=$(findPattern "certificate-domain" $TEMPLATE)
 
         # find server_name for check certificate
-        if [[ -z $CERTIFICATE_DOMAIN ]]; then
+        if [ -z $CERTIFICATE_DOMAIN ]; then
             CERTIFICATE_DOMAIN=$(perl -e '$str = $ARGV[0];if ($str =~ /server_name([A-z.0-9]*);/) {print $1;};' -- $(echo $TEMPLATE | sed 's/ //g'))
         fi
 
-        if [[ $CERTIFICATE_DOMAIN != "" ]]; then
+        if [ $CERTIFICATE_DOMAIN != "" ]; then
             SSL_KEY=/etc/letsencrypt/live/${CERTIFICATE_DOMAIN}/privkey.pem;
             SSL_CERT=/etc/letsencrypt/live/${CERTIFICATE_DOMAIN}/fullchain.pem;
 
