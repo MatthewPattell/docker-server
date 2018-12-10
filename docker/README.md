@@ -12,7 +12,7 @@
 * MySQL 5.7
 
 # Nginx docker container
-* Nginx 1.13.10
+* Nginx 1.15.7
 
 # Redis docker container
 * Redis 4.0.10
