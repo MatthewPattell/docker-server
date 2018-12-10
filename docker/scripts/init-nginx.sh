@@ -63,7 +63,7 @@ for COMMON_TEMPLATE in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*
         rm $COMMON_DYNAMIC
     fi
 
-   for DOMAIN in $ONLY_DOMAINS; do
+    for DOMAIN in $ONLY_DOMAINS; do
         # TODO: TOPDOMAIN and C_DOMAIN used only in certificates pattern. Replace them with $CERTIFICATE_DOMAIN variable.
         TOPDOMAIN=$(perl -e 'if ($ARGV[0] =~ /^((?<subdomain>[^\.]*)\.)?(?<domain>[^\.]*)\.(?<topdomain>((com\.ua)|.*))$/) {print $+{topdomain};};' -- "$DOMAIN")
         C_DOMAIN=$(perl -e 'if ($ARGV[0] =~ /^((?<subdomain>[^\.]*)\.)?(?<domain>[^\.]*)\.(?<topdomain>(com\.)?.*)$/) {print $+{domain};};' -- "$DOMAIN")
@@ -75,7 +75,7 @@ for COMMON_TEMPLATE in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*
         TEMPLATE="${TEMPLATE//\$PARSED_DOMAINS/$ONLY_DOMAINS}"
         TEMPLATE="${TEMPLATE//\$ROOT_PATH/$REPLACE_ROOT}"
 
-        # TODO: rewrite get-certificates with sh and this part of script
+        # TODO: rewrite get-certificates with sh and this part of script.
         for each in $(cat "${ENV_PATH}" | awk -F= '/^SSL_DOMAINS\[[0-9]\]/ {print $2}')
         do
             LIST_CERTIFICATE_DOMAINS=$(echo "$each" | cut -d ':' -f 2)
