@@ -42,7 +42,7 @@ if [ ! -z $GIT_AUTHTOKEN ]; then
 fi
 
 if [ $RUN_SERVER_COMPOSER == "1" ]; then
-    composer global require "fxp/composer-asset-plugin": "^1.4.2"
+    composer global require "fxp/composer-asset-plugin:^1.4.2"
     composer global require "hirak/prestissimo:~0.3.7"
 
     cd ${PROJECT_ROOT_CONTAINER} && composer install
