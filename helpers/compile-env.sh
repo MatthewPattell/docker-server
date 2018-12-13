@@ -52,13 +52,17 @@ for ENV_FILE in "${ADDR[@]}"; do
             case "$name" in \#*) continue ;; esac
             if [ ! -z "$name" ] && [ ! -z "$value" ]; then
                 # Collect the environments, which will be added to result file
-                if [[ ! ${SERVER_ENVS[@]} =~ " $name " ]]; then
+                if [[ ! ${SERVER_ENVS[@]} =~ " $name " ]] &&
+                    [[ ! ${SERVER_ENVS[@]} =~ "$name " ]] &&
+                    [[ ! ${SERVER_ENVS[@]} =~ " $name" ]]; then
                     SERVER_ENVS+=("$name")
                 fi
 
                 # Collect the environments, which will be recompile
                 if [[ $value = *"\${"* ]]; then
-                    if [[ ! ${SERVER_ENVS_RECOMPILE_NAMES[@]} =~ " $name " ]]; then
+                    if [[ ! ${SERVER_ENVS_RECOMPILE_NAMES[@]} =~ " $name " ]] &&
+                        [[ ! ${SERVER_ENVS_RECOMPILE_NAMES[@]} =~ "$name " ]] &&
+                        [[ ! ${SERVER_ENVS_RECOMPILE_NAMES[@]} =~ " $name" ]]; then
                         SERVER_ENVS_RECOMPILE_NAMES+=("$name")
                     fi
 
