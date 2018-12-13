@@ -1,15 +1,18 @@
-# LEMP docker container with php 7.1
+# PHP-frpm docker container with PHP 7.1
+* Ubuntu 18.04
+* PHP 7.1
 
-Features
-* Ubuntu 16.04
-* Php 7.1
+# PHP docker container with PHP 7.1
+* Extends PHP-fpm image
 * SSH
+* Certbot
+* Cron
 
 # MySQL docker container
 * MySQL 5.7
 
 # Nginx docker container
-* Nginx 1.13.10
+* Nginx 1.15.7
 
 # Redis docker container
 * Redis 4.0.10

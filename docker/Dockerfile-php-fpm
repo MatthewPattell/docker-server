@@ -1,0 +1,43 @@
+FROM ubuntu:18.04
+MAINTAINER Mathew Patell <likomi@mail.ru>
+
+# Setup environment
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update -y --fix-missing \
+    # Images utils
+    && apt-get install -y libjpeg-progs jpegoptim pngquant librsvg2-2 \
+    # PHP repository
+    && echo 'deb http://ppa.launchpad.net/ondrej/php/ubuntu bionic main' \
+            > /etc/apt/sources.list.d/ondrej-ubuntu-php-bionic.list \
+    && apt-get install -y gnupg \
+    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C \
+    && apt-get update -y --fix-missing \
+    # PHP
+    && apt-get install -y --allow-unauthenticated \
+            php7.1 php7.1-fpm php7.1-cgi php7.1-cli php7.1-common \
+            php7.1-bcmath php7.1-curl php7.1-dba php7.1-enchant \
+            php7.1-gd php7.1-gmp php-imagick \
+            php7.1-imap php7.1-interbase \
+            php7.1-intl php7.1-json php7.1-ldap \
+            php7.1-mbstring \
+            php7.1-mysql php7.1-odbc php7.1-pgsql php7.1-sqlite3 \
+            php7.1-opcache php7.1-pspell php7.1-readline \
+            php7.1-recode php7.1-snmp php7.1-soap \
+            php7.1-sybase php7.1-tidy \
+            php7.1-xml php7.1-xmlrpc php7.1-xsl \
+            php7.1-zip php7.1-bz2 \
+            php7.1-dev php7.1-phpdbg php7.1-xdebug \
+    # Pecl extensions
+    # yaml
+    && apt-get install -y libyaml-dev \
+    && printf "\n" | pecl install yaml-2.0.0 \
+    && echo "extension=yaml.so" >> /etc/php/7.1/mods-available/yaml.ini \
+    && phpenmod yaml \
+    # Cleaup
+    && apt-get remove -y gnupg \
+    && apt-get -y autoremove && apt-get autoclean
+
+EXPOSE 9000
+
+CMD ["php-fpm7.1", "-R", "-F"]

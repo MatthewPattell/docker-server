@@ -59,13 +59,14 @@ for COMMON_TEMPLATE in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*
     echo "" > $COMMON_DYNAMIC
 
     # if empty domains, remove config
-    if [[ -z $ONLY_DOMAINS ]]; then
+    if [ -z "$ONLY_DOMAINS" ]; then
         rm $COMMON_DYNAMIC
     fi
 
     for DOMAIN in $ONLY_DOMAINS; do
-        TOPDOMAIN=$(perl -e 'if ($ARGV[0] =~ /((?<subdomain>.*)\.)?(?<domain>.*)\.(?<topdomain>.*)$/) {print $+{topdomain};};' -- "$DOMAIN")
-        C_DOMAIN=$(perl -e 'if ($ARGV[0] =~ /((?<subdomain>.*)\.)?(?<domain>.*)\.(?<topdomain>.*)$/) {print $+{domain};};' -- "$DOMAIN")
+        # TODO: TOPDOMAIN and C_DOMAIN used only in certificates pattern. Replace them with $CERTIFICATE_DOMAIN variable.
+        TOPDOMAIN=$(perl -e 'if ($ARGV[0] =~ /^((?<subdomain>[^\.]*)\.)?(?<domain>[^\.]*)\.(?<topdomain>((com\.ua)|.*))$/) {print $+{topdomain};};' -- "$DOMAIN")
+        C_DOMAIN=$(perl -e 'if ($ARGV[0] =~ /^((?<subdomain>[^\.]*)\.)?(?<domain>[^\.]*)\.(?<topdomain>(com\.)?.*)$/) {print $+{domain};};' -- "$DOMAIN")
         TEMPLATE=$TEMPLATE_CODE
         TEMPLATE="${TEMPLATE//\$COMMON_DOMAIN/$DOMAIN}"
         TEMPLATE="${TEMPLATE//\$ENVIRONMENT/$ENVIRONMENT}"
@@ -74,17 +75,29 @@ for COMMON_TEMPLATE in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*
         TEMPLATE="${TEMPLATE//\$PARSED_DOMAINS/$ONLY_DOMAINS}"
         TEMPLATE="${TEMPLATE//\$ROOT_PATH/$REPLACE_ROOT}"
 
+        # TODO: rewrite get-certificates with sh and this part of script.
+        for each in $(cat "${ENV_PATH}" | awk -F= '/^SSL_DOMAINS\[[0-9]\]/ {print $2}')
+        do
+            LIST_CERTIFICATE_DOMAINS=$(echo "$each" | cut -d ':' -f 2)
+            MAIN_CERTIFICATE=$(echo "$LIST_CERTIFICATE_DOMAINS" | cut -d ' ' -f 1)
+            for CERTIFICATE_DOMAIN in $LIST_CERTIFICATE_DOMAINS; do
+                if [ "$CERTIFICATE_DOMAIN" = "$DOMAIN" ]; then
+                    TEMPLATE="${TEMPLATE//\$CERTIFICATE_DOMAIN/$MAIN_CERTIFICATE}"
+                fi
+            done
+        done
+
         SSL_DERICTIVE=""
 
         # find external certificate domain
         CERTIFICATE_DOMAIN=$(findPattern "certificate-domain" $TEMPLATE)
 
         # find server_name for check certificate
-        if [[ -z $CERTIFICATE_DOMAIN ]]; then
+        if [ -z $CERTIFICATE_DOMAIN ]; then
             CERTIFICATE_DOMAIN=$(perl -e '$str = $ARGV[0];if ($str =~ /server_name([A-z.0-9]*);/) {print $1;};' -- $(echo $TEMPLATE | sed 's/ //g'))
         fi
 
-        if [[ $CERTIFICATE_DOMAIN != "" ]]; then
+        if [ $CERTIFICATE_DOMAIN != "" ]; then
             SSL_KEY=/etc/letsencrypt/live/${CERTIFICATE_DOMAIN}/privkey.pem;
             SSL_CERT=/etc/letsencrypt/live/${CERTIFICATE_DOMAIN}/fullchain.pem;
 
