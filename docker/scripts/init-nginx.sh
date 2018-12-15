@@ -38,13 +38,15 @@ find /etc/nginx/conf-dynamic.d/ -name "*.conf" -type f -delete
 
 # create dynamic nginx configs
 for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.conf; do
-    TEMPLATE_PATH=/etc/nginx/conf-dynamic.d/$(basename ${TEMPLATE_NAME})
+    TARGET_CONFIG_PATH=/etc/nginx/conf-dynamic.d/$(basename ${TEMPLATE_NAME})
+    # Remove old file
+    [[ -f file ]] && rm ${TARGET_CONFIG_PATH}
 
     # get template content
     BASE_TEMPLATE_CODE=$(cat ${TEMPLATE_NAME})
 
     # copy template
-    TEMPLATE_PATH=$(findPattern "template" ${BASE_TEMPLATE_CODE})
+    TEMPLATE_PATH=$(findPattern "template" "${BASE_TEMPLATE_CODE}")
 
     if [[ ! -z ${TEMPLATE_PATH} ]]; then
         if [[ ! -f ${TEMPLATE_PATH} ]]; then
@@ -55,29 +57,22 @@ for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.c
         BASE_TEMPLATE_CODE=$(echo -e "$BASE_TEMPLATE_CODE \n\n$(grep -o '^[^#]*' ${TEMPLATE_PATH})")
     fi
 
-    # Clean file
-    echo "" > ${TEMPLATE_PATH}
-
     # allow domain
-    ONLY_DOMAINS=$(findPattern "domains-include" ${BASE_TEMPLATE_CODE})
-    # TODO: replace with bash.
+    ONLY_DOMAINS=$(findPattern "domains-include" "${BASE_TEMPLATE_CODE}")
     ONLY_DOMAINS=${!ONLY_DOMAINS}
 
-    # root path
-    REPLACE_ROOT=$(findPattern "root-path" ${BASE_TEMPLATE_CODE})
-
-    # if empty domains, remove config
+    # if empty domains skip creating config
     if [[ -z "$ONLY_DOMAINS" ]]; then
-        rm ${TEMPLATE_PATH}
         continue
     fi
+    # create new config
+    echo "" >> "${TARGET_CONFIG_PATH}"
+
+    # root path
+    REPLACE_ROOT=$(findPattern "root-path" "${BASE_TEMPLATE_CODE}")
 
     for DOMAIN in ${ONLY_DOMAINS}; do
-        # TODO: TOPDOMAIN and C_DOMAIN used only in certificates pattern. Replace them with $CERTIFICATE_DOMAIN variable.
-        # TODO: replace with bash.
-        TOPDOMAIN=$(echo ${DOMAIN} | sed -n "s:(([^\.]*)\.)?([^\.]*)\.([^\.]*):\4:p")
-        C_DOMAIN=$(echo ${DOMAIN} | sed -n "s:(([^\.]*)\.)?([^\.]*)\.([^\.]*):\3:p")
-        TEMPLATE_CODE=${BASE_TEMPLATE_CODE}
+        TEMPLATE_CODE="${BASE_TEMPLATE_CODE}"
         TEMPLATE_CODE="${TEMPLATE_CODE//\$COMMON_DOMAIN/$DOMAIN}"
         TEMPLATE_CODE="${TEMPLATE_CODE//\$ENVIRONMENT/$ENVIRONMENT}"
         TEMPLATE_CODE="${TEMPLATE_CODE//\$TOPDOMAIN/$TOPDOMAIN}"
@@ -91,12 +86,13 @@ for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.c
             for CERTIFICATE_DOMAIN in ${LIST_CERTIFICATE_DOMAINS}; do
                 if [[ "${CERTIFICATE_DOMAIN}" = "${DOMAIN}" ]]; then
                     TEMPLATE_CODE="${TEMPLATE_CODE//\$CERTIFICATE_DOMAIN/$MAIN_CERTIFICATE}"
+                    break 2
                 fi
             done
         done
 
         # find external certificate domain
-        CERTIFICATE_DOMAIN=$(findPattern "certificate-domain" ${TEMPLATE_CODE})
+        CERTIFICATE_DOMAIN=$(findPattern "certificate-domain" "${TEMPLATE_CODE}")
         # or use current server_name (DOMAIN)
         if [[ -z ${CERTIFICATE_DOMAIN} ]]; then
             # TODO: replace with bash.
@@ -120,7 +116,7 @@ for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.c
 
         TEMPLATE_CODE="${TEMPLATE_CODE//\$SSL_INCLUDE/$SSL_DIRECTIVE}"
 
-        echo "${TEMPLATE_CODE}" >> ${TEMPLATE_PATH}
+        echo "${TEMPLATE_CODE}" >> ${TARGET_CONFIG_PATH}
     done
 done
 
