@@ -13,8 +13,8 @@ set +a
 CERTIFICATE_WEB_ROOT="${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/web"
 
 for i in ${!SSL_DOMAINS[*]}; do
-    EMAIL="$(cut -d':' -f1 <<<"$SSL_DOMAINS[$i]")"
-    LIST_DOMAINS="$(cut -d':' -f2 <<<"$SSL_DOMAINS[$i]")"
+    EMAIL="$(cut -d':' -f1 <<<"${SSL_DOMAINS[$i]}")"
+    LIST_DOMAINS="$(cut -d':' -f2 <<<"${SSL_DOMAINS[$i]}")"
 
     COMMAND="certbot certonly --webroot --agree-tos --no-eff-email --email $EMAIL -w $CERTIFICATE_WEB_ROOT"
 
