@@ -27,7 +27,7 @@ RUN apt-get update -y --fix-missing \
             php7.1-sybase php7.1-tidy \
             php7.1-xml php7.1-xmlrpc php7.1-xsl \
             php7.1-zip php7.1-bz2 \
-            php7.1-dev php7.1-phpdbg php7.1-xdebug \
+            php7.1-dev \
     # Pecl extensions
     # yaml
     && apt-get install -y libyaml-dev \
@@ -35,7 +35,7 @@ RUN apt-get update -y --fix-missing \
     && echo "extension=yaml.so" >> /etc/php/7.1/mods-available/yaml.ini \
     && phpenmod yaml \
     # Cleaup
-    && apt-get remove -y gnupg \
+    && apt-get remove -y php7.1-dev gnupg \
     && apt-get -y autoremove && apt-get autoclean
 
 EXPOSE 9000
