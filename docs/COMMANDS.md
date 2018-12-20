@@ -1,5 +1,4 @@
-Available console commands
-===========================
+# Available console commands
 
 List simple commands run in project root.
 
@@ -12,3 +11,19 @@ List simple commands run in project root.
  - `composer server-exec server "ls -l"` run command inside exist running service `server`
  
 [See AWS commands](ENVIRONMENTS.md#auto-update-hosts-envs)
+
+
+## Get SSL certificates script
+
+### Test certbot commands
+
+Run command: 
+
+    ENV_PATH=/path-to-project/docker/scripts/test/.env bash ./docker/scripts/get-certificates.sh --test
+    Output example:
+    
+Output example:
+
+    eval certbot certonly --webroot --agree-tos --no-eff-email --email admin@test.com  -w /home/konstantin/Project/lib/docker-server/nginx/web -d foo.com -d t.foo.com
+    eval certbot certonly --webroot --agree-tos --no-eff-email --email admin@test.com  -w /home/konstantin/Project/lib/docker-server/nginx/web -d baz.com -d admin.baz.com -d bar.com
+

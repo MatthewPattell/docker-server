@@ -9,20 +9,20 @@ set -o nounset # exit when tries to use undeclared variables.
 # --test - view commands that would be evaluated
 # --yes - force confirm all domains
 TEST=0
-YES=0
+AUTOCONFIRM=0
 while [[ ! $# -eq 0 ]]; do
     case "$1" in
         --test)
             TEST=1
             ;;
         --yes | -y)
-            YES=1
+            AUTOCONFIRM=1
             ;;
     esac
     shift
 done
 
-# RUN ON CONTAINER
+# RUN IN CONTAINER
 
 # renew certificates min period = 5 time per 7 days!!!
 
@@ -44,35 +44,33 @@ for i in ${!SSL_DOMAINS[*]}; do
         COMMAND="${COMMAND} -d ${DOMAIN}"
     done
 
-    if [[ TEST ]]; then
-        echo "${COMMAND}"
+    if [[ "${TEST}" = "1" ]]; then
+        echo "command is: ${COMMAND}"
         continue
     fi
 
-    yn=
-    if [[ YES ]]; then
-        echo "auto confirm enabled"
-        yn="y"
+    CONFIRM_RESPONSE=
+    if [[ "${AUTOCONFIRM}" = "1" ]]; then
+        CONFIRM_RESPONSE="y"
     fi
     while true; do
-        if [[ -z yn ]]; then
+        if [[ -z "${CONFIRM_RESPONSE}" ]]; then
             echo "Confirm new ssl certificated for ${LIST_DOMAINS}?"
-            read -p "Type: [y]es/[s]kip/[b]reak" yn
+            read -p "Type: [y]es/[s]kip/[b]reak: " CONFIRM_RESPONSE
         fi
 
-        shopt -s nocasematch
-        case $yn in
-            y | yes ) make install;
-                echo "evaluating ${COMMAND}"
-                #eval $COMMAND
+        case "${CONFIRM_RESPONSE}" in
+            y | yes )
+                echo "eval ${COMMAND}"
+                eval "${COMMAND}"
+                break
                 ;;
             s | skip | n | no )
-                echo "break"
                 break
                 ;;
             b | break)
-                echo "exit"
-                exit;;
+                exit
+                ;;
             * ) echo "Please answer [y]es, [s]kip or [b]reak.";;
         esac
     done
