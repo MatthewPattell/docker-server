@@ -88,4 +88,4 @@ Subsystem sftp /usr/lib/openssh/sftp-server
 # @TODO_ after update amazon docker version > 17.12.0 turn to "yes"
 UsePAM no
 KexAlgorithms diffie-hellman-group1-sha1,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group14-sha1
-Ciphers 3des-cbc,blowfish-cbc,aes128-cbc,aes128-ctr,aes256-ctr
+Ciphers 3des-cbc,aes128-cbc,aes128-ctr,aes256-ctr
