@@ -59,12 +59,19 @@ for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.c
 
     # allow domain
     ONLY_DOMAINS=$(findPattern "domains-include" "${BASE_TEMPLATE_CODE}")
+
+    # if domain variable not exist
+    if [ -z ${!ONLY_DOMAINS:-} ]; then
+        continue
+    fi
+
     ONLY_DOMAINS=${!ONLY_DOMAINS}
 
-    # if empty domains skip creating config
+    # if empty domain, skip creating config
     if [[ -z "$ONLY_DOMAINS" ]]; then
         continue
     fi
+
     # create new config
     echo "" >> "${TARGET_CONFIG_PATH}"
 
