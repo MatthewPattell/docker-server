@@ -79,11 +79,19 @@ for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.c
     REPLACE_ROOT=$(findPattern "root-path" "${BASE_TEMPLATE_CODE}")
 
     for DOMAIN in ${ONLY_DOMAINS}; do
+        DOMAIN_1LVL=$(echo "${DOMAIN}" | sed -n "s/\([^\.]*\)\.\([^\.]*\)/\2/p")
+        DOMAIN_2LVL=$(echo "${DOMAIN}" | sed -n "s/\([^\.]*\)\.\([^\.]*\)/\1/p")
+
         TEMPLATE_CODE="${BASE_TEMPLATE_CODE}"
         TEMPLATE_CODE="${TEMPLATE_CODE//\$COMMON_DOMAIN/$DOMAIN}"
         TEMPLATE_CODE="${TEMPLATE_CODE//\$ENVIRONMENT/$ENVIRONMENT}"
+        TEMPLATE_CODE="${TEMPLATE_CODE//\$DOMAIN_1LVL/$DOMAIN_1LVL}"
+        TEMPLATE_CODE="${TEMPLATE_CODE//\$DOMAIN_2LVL/$DOMAIN_2LVL}"
         TEMPLATE_CODE="${TEMPLATE_CODE//\$PARSED_DOMAINS/$ONLY_DOMAINS}"
         TEMPLATE_CODE="${TEMPLATE_CODE//\$ROOT_PATH/$REPLACE_ROOT}"
+        # deprecated:
+        TEMPLATE_CODE="${TEMPLATE_CODE//\$TOPDOMAIN/$DOMAIN_1LVL}"
+        TEMPLATE_CODE="${TEMPLATE_CODE//\$C_DOMAIN/$DOMAIN_2LVL}"
 
         for i in ${!SSL_DOMAINS[*]}; do
             LIST_CERTIFICATE_DOMAINS=$(echo "${SSL_DOMAINS[$i]}" | cut -d ':' -f 2)
