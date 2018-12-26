@@ -78,6 +78,9 @@ for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.c
     # root path
     REPLACE_ROOT=$(findPattern "root-path" "${BASE_TEMPLATE_CODE}")
 
+    # custom snippets
+    REPLACE_CUSTOM_SNIPPETS=$(findPattern "custom-snippets" "${BASE_TEMPLATE_CODE}")
+
     for DOMAIN in ${ONLY_DOMAINS}; do
         DOMAIN_1LVL=$(echo "${DOMAIN}" | sed -n "s/\([^\.]*\)\.\([^\.]*\)/\2/p")
         DOMAIN_2LVL=$(echo "${DOMAIN}" | sed -n "s/\([^\.]*\)\.\([^\.]*\)/\1/p")
@@ -89,6 +92,7 @@ for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.c
         TEMPLATE_CODE="${TEMPLATE_CODE//\$DOMAIN_2LVL/$DOMAIN_2LVL}"
         TEMPLATE_CODE="${TEMPLATE_CODE//\$PARSED_DOMAINS/$ONLY_DOMAINS}"
         TEMPLATE_CODE="${TEMPLATE_CODE//\$ROOT_PATH/$REPLACE_ROOT}"
+        TEMPLATE_CODE="${TEMPLATE_CODE//\$CUSTOM_SNIPPETS/$REPLACE_CUSTOM_SNIPPETS}"
 
         for i in ${!SSL_DOMAINS[*]}; do
             LIST_CERTIFICATE_DOMAINS=$(echo "${SSL_DOMAINS[$i]}" | cut -d ':' -f 2)
