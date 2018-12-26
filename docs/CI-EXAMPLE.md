@@ -107,7 +107,7 @@ SERVICES="$SERVICES -f docker/docker-compose.common.yml -f !!docker-compose.test
 Contains your `common-test.conf` file in `docker/nginx/conf-dynamic.d`:
 ```
 # Variable automaticaly replaced:
-# TOPDOMAIN, SSL_INCLUDE, COMMON_DOMAIN, C_DOMAIN, PARSED_DOMAINS
+# SSL_INCLUDE, COMMON_DOMAIN, PARSED_DOMAINS, DOMAIN_1LVL, DOMAIN_2LVL
 
 # allow domains:
 #
@@ -117,7 +117,7 @@ Contains your `common-test.conf` file in `docker/nginx/conf-dynamic.d`:
 
 # change certificate domain:
 #
-# <certificate-domain>$C_DOMAIN.$TOPDOMAIN</certificate-domain>
+# <certificate-domain>$CERTIFICATE_DOMAIN</certificate-domain>
 
 server {
     charset              utf-8;
