@@ -43,8 +43,9 @@ Property | Values | Description
 ## <a id="images-envs"></a>Images env (service: all)
 Property | Values | Description
 ---------|--------|------------
-`NGINX_REPOSITORY`| `(string)` `Default: matthewpatell/universal-docker-nginx:2.1` | Nginx docker image
-`SERVER_REPOSITORY`| `(string)` `Default: matthewpatell/universal-docker-server:2.2` | Server docker image (php, ssh and etc.)
+`NGINX_REPOSITORY`| `(string)` `Default: matthewpatell/universal-docker-nginx:3.2` | Nginx docker image
+`SERVER_REPOSITORY`| `(string)` `Default: matthewpatell/universal-docker-server:3.7-dev` | Either server (or server dev) image in non-scalable configuration, or `matthewpatell/universal-docker-server-php-fpm` for scaling `nginx`+`php-fpm`.
+`TERMINAL_REPOSITORY`| `(string)` `Default: none` | Static non-scalable docker image for ssh connection, cron, queue listener and etc. Use image: `matthewpatell/universal-docker-server`.
 
 ## <a id="server-envs"></a>Server env (service: server)
 
