@@ -1,5 +1,4 @@
-Recommended config for Mac OS
-===========================
+# Recommended config for Mac OS
 
 Contains your env file **docker/.env-local**:
 ```dotenv

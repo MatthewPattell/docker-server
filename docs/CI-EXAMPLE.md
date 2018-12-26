@@ -1,5 +1,4 @@
-CI Example
-===========================
+# CI Example
 
 Contains your **.gitlab-ci.yml** file:
 ```dotenv

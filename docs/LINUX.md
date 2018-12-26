@@ -1,5 +1,4 @@
-Recommended config for Linux
-===========================
+# Recommended config for Linux
 
 Contains your env file **docker/.env-local**:
 ```dotenv

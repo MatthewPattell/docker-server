@@ -161,11 +161,10 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log \
     \
-    # install perl
-    # NOTE: needed in init script
-    && apk add --no-cache perl \
-    \
     # dynamic configs
-    && mkdir /etc/nginx/conf-dynamic.d
+    && mkdir /etc/nginx/conf-dynamic.d \
+    \
+    # other packages
+    && apk add --no-cache bash
 
 ENTRYPOINT ["/scripts/init-nginx.sh"]
