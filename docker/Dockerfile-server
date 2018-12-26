@@ -1,4 +1,4 @@
-FROM matthewpatell/universal-docker-php-fpm:3.6
+FROM matthewpatell/universal-docker-php-fpm:3.7
 
 # Utils
 RUN apt-get update -y --fix-missing \
