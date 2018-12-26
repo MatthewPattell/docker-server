@@ -48,8 +48,8 @@ for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.c
     # copy template
     TEMPLATE_PATH=$(findPattern "template" "${BASE_TEMPLATE_CODE}")
 
-    if [[ ! -z ${TEMPLATE_PATH} ]]; then
-        if [[ ! -f ${TEMPLATE_PATH} ]]; then
+    if [[ ! -z "${TEMPLATE_PATH}" ]]; then
+        if [[ ! -f "${TEMPLATE_PATH}" ]]; then
             TEMPLATE_PATH="${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/${TEMPLATE_PATH}"
         fi
 
@@ -61,7 +61,7 @@ for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.c
     ONLY_DOMAINS=$(findPattern "domains-include" "${BASE_TEMPLATE_CODE}")
 
     # if domain variable not exist
-    if [ -z ${!ONLY_DOMAINS:-} ]; then
+    if [[ -z "${!ONLY_DOMAINS:-}" ]]; then
         continue
     fi
 
@@ -79,9 +79,14 @@ for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.c
     REPLACE_ROOT=$(findPattern "root-path" "${BASE_TEMPLATE_CODE}")
 
     for DOMAIN in ${ONLY_DOMAINS}; do
+        DOMAIN_1LVL=$(echo "${DOMAIN}" | sed -n "s/\([^\.]*\)\.\([^\.]*\)/\2/p")
+        DOMAIN_2LVL=$(echo "${DOMAIN}" | sed -n "s/\([^\.]*\)\.\([^\.]*\)/\1/p")
+
         TEMPLATE_CODE="${BASE_TEMPLATE_CODE}"
         TEMPLATE_CODE="${TEMPLATE_CODE//\$COMMON_DOMAIN/$DOMAIN}"
         TEMPLATE_CODE="${TEMPLATE_CODE//\$ENVIRONMENT/$ENVIRONMENT}"
+        TEMPLATE_CODE="${TEMPLATE_CODE//\$DOMAIN_1LVL/$DOMAIN_1LVL}"
+        TEMPLATE_CODE="${TEMPLATE_CODE//\$DOMAIN_2LVL/$DOMAIN_2LVL}"
         TEMPLATE_CODE="${TEMPLATE_CODE//\$PARSED_DOMAINS/$ONLY_DOMAINS}"
         TEMPLATE_CODE="${TEMPLATE_CODE//\$ROOT_PATH/$REPLACE_ROOT}"
 
