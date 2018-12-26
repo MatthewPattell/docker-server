@@ -48,8 +48,8 @@ for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.c
     # copy template
     TEMPLATE_PATH=$(findPattern "template" "${BASE_TEMPLATE_CODE}")
 
-    if [[ ! -z ${TEMPLATE_PATH} ]]; then
-        if [[ ! -f ${TEMPLATE_PATH} ]]; then
+    if [[ ! -z "${TEMPLATE_PATH}" ]]; then
+        if [[ ! -f "${TEMPLATE_PATH}" ]]; then
             TEMPLATE_PATH="${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/${TEMPLATE_PATH}"
         fi
 
@@ -61,7 +61,7 @@ for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.c
     ONLY_DOMAINS=$(findPattern "domains-include" "${BASE_TEMPLATE_CODE}")
 
     # if domain variable not exist
-    if [ -z ${!ONLY_DOMAINS:-} ]; then
+    if [[ -z "${!ONLY_DOMAINS:-}" ]]; then
         continue
     fi
 
