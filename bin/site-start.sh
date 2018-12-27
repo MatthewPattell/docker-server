@@ -39,6 +39,7 @@ elif [ "$ACTION" = "init" ]; then
     if [ ! -d "$TARGET_DIR" ]; then
         cp -r "$VENDOR_DIR/sample" "$TARGET_DIR/"
         mv "$TARGET_DIR/.env-sample" "$TARGET_DIR/.env-local"
+        mv "$TARGET_DIR/.env-sample-prod" "$TARGET_DIR/.env-prod"
         mv "$TARGET_DIR/docker-compose.local-sample.yml" "$TARGET_DIR/docker-compose.local.yml"
         echo "Server init success."
         echo "Change root-path in: $TARGET_DIR/nginx/conf-dynamic.d/sample.conf"
