@@ -1,0 +1,36 @@
+version: '2'
+
+services:
+  ftp:
+    image: drummerroma/pureftpd-mysql
+    hostname: ftpserver
+    container_name: ${COMPOSE_PROJECT_NAME}_ftp
+    entrypoint: /bin/bash -c "chmod 764 /home/run.sh && /home/run.sh"
+    environment:
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_PORT=${MYSQL_PORT}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - SUBJ_C=${FTP_SUBJECT_COUNTRY}
+      - SUBJ_L=${FTP_SUBJECT_CITY}
+      - SUBJ_O=${FTP_SUBJECT_ORGANIZATION}
+      - SUBJ_CN=${FTP_SUBJECT_DOMAIN}
+      - FTP_DB_TABLE_NAME=${FTP_DB_TABLE_NAME}
+    ports:
+      - ${FTP_PORT_BIND}:21
+      - ${FTP_PASSIVE_PORT_1}:30000
+      - ${FTP_PASSIVE_PORT_2}:30001
+      - ${FTP_PASSIVE_PORT_3}:30002
+      - ${FTP_PASSIVE_PORT_4}:30003
+      - ${FTP_PASSIVE_PORT_5}:30004
+      - ${FTP_PASSIVE_PORT_6}:30005
+      - ${FTP_PASSIVE_PORT_7}:30006
+      - ${FTP_PASSIVE_PORT_8}:30007
+      - ${FTP_PASSIVE_PORT_9}:30008
+      - ${FTP_PASSIVE_PORT_10}:30009
+    volumes:
+      - ${PACKAGE_DOCKER_FOLDER}/ftp/run.sh:/home/run.sh
+      - ${PROJECT_DOCKER_FOLDER}/ftp/logs:/var/log/pure-ftpd
+      # Override to your folder if needed
+      - ${PROJECT_DOCKER_FOLDER}/ftp/data:/ftpdata
