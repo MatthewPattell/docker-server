@@ -1,0 +1,39 @@
+version: '2'
+
+services:
+  server:
+    hostname: server
+    image: ${SERVER_REPOSITORY}
+    container_name: ${COMPOSE_PROJECT_NAME}_server
+    expose:
+      - ${DEBUG_PORT}
+    environment:
+      ENV_PATH: ${PROJECT_DOCKER_FOLDER_CONTAINER}/.env
+    volumes:
+      - ${PROJECT_ROOT}:${PROJECT_ROOT_CONTAINER}
+      - ${PACKAGE_DOCKER_FOLDER}:${PACKAGE_DOCKER_FOLDER_CONTAINER}
+      - ${PACKAGE_DOCKER_FOLDER}/scripts:/scripts
+      - ${PROJECT_DOCKER_FOLDER}/letsencrypt/${PROJECT_ENVIRONMENT}:/etc/letsencrypt
+      # cron
+      - ${PACKAGE_DOCKER_FOLDER}/pam/pam.d/cron:/etc/pam.d/cron
+      - ${PROJECT_DOCKER_FOLDER}/cron/server/logs:/var/log/cron
+      # php
+      - ${PACKAGE_DOCKER_FOLDER}/php/php.ini:/etc/php/7.1/cli/php.ini
+      - ${PACKAGE_DOCKER_FOLDER}/php/php.ini:/etc/php/7.1/fpm/php.ini
+      - ${PACKAGE_DOCKER_FOLDER}/php/php-fpm.conf:/etc/php/7.1/fpm/php-fpm.conf
+      - ${PACKAGE_DOCKER_FOLDER}/php/pool.d:/etc/php/7.1/fpm/pool.d/
+      - ${PACKAGE_DOCKER_FOLDER}/php/mods-available/xdebug.ini:/etc/php/7.1/mods-available/xdebug.ini
+      - ${PROJECT_DOCKER_FOLDER}/php/logs:/var/log/php7.1-fpm/
+      # supervisor
+      - ${PACKAGE_DOCKER_FOLDER}/supervisord/supervisord.conf:/etc/supervisor/supervisord.conf
+      - ${PROJECT_DOCKER_FOLDER}/supervisord/server/logs:/var/log/supervisord
+      - ${PACKAGE_DOCKER_FOLDER}/supervisord/server/services:/etc/supervisor/conf.d
+    working_dir: ${PROJECT_ROOT_CONTAINER}
+    networks:
+      common:
+        aliases:
+          - server
+
+networks:
+  common:
+    driver: bridge
