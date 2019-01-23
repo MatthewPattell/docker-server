@@ -1,0 +1,8 @@
+version: '2'
+
+services:
+  server:
+    volumes:
+      - ${PACKAGE_DOCKER_FOLDER}/ssh/sshd_config:/etc/ssh/sshd_config
+      - ${PROJECT_DOCKER_FOLDER}/ssh/files:${PACKAGE_DOCKER_FOLDER_CONTAINER}/ssh/files
+      - ${PACKAGE_DOCKER_FOLDER}/supervisord/other/services/6.sshd.conf:/etc/supervisor/conf.d/6.sshd.conf

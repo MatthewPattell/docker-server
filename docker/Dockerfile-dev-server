@@ -1,6 +1,6 @@
 FROM matthewpatell/universal-docker-server:3.7
 
-# TODO: write script which will generate gourp of dockerfiles with same version
+# TODO: write script which will generate group of dockerfiles with same version
 
 RUN apt-get install -y \
     php7.1-dev \

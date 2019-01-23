@@ -5,6 +5,7 @@
  - [Server envs](#server-envs)
  - [Mysql envs](#mysql-envs)
  - [Redis envs](#redis-envs)
+ - [FTP envs](#ftp-envs)
  - [SSH envs](#ssh-envs)
  - [PHP-FPM envs](#php-fpm-envs)
  - [Testing envs](#testing-envs)
@@ -80,6 +81,20 @@ Property | Values | Description
 `REDIS_PORT`| `(int)` `Default: 6379` | Redis port (external)
 `REDIS_PASSWORD` | `(string)` | Redis password
 `REDIS_DATABASE` | `(string)` | Redis database
+
+## <a id="ftp-envs"></a>FTP env (service: ftp)
+
+`-f !!docker-compose.ftp.yml` add to `SERVICES` (default: not added)
+
+Property | Values | Description
+---------|--------|------------
+`FTP_DB_TABLE_NAME`| `(string)` `Default: ftp_users` | Mysql table name where stored ftp users
+`FTP_PORT_BIND`| `(int)` `Default: 21` | FTP primary port
+`FTP_PASSIVE_PORT_1-10` | `(int)` `Default: 30000-30009` | FTP passive ports 
+`FTP_SUBJECT_COUNTRY` | `(string)` | Country code (ISO 3166-1 alpha-2). For SSL
+`FTP_SUBJECT_CITY` | `(string)` | City name. For SSL
+`FTP_SUBJECT_ORGANIZATION` | `(string)` | Organization name. For SSL
+`FTP_SUBJECT_DOMAIN` | `(string)` | Organization name. For SSL
 
 ## <a id="ssh-envs"></a>SSH env (service: server)
 

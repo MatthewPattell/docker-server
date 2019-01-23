@@ -1,0 +1,28 @@
+version: '2'
+
+services:
+  nginx:
+    image: ${NGINX_REPOSITORY}
+    container_name: ${COMPOSE_PROJECT_NAME}_nginx
+    hostname: nginx
+    environment:
+      ENV_PATH: ${PROJECT_DOCKER_FOLDER_CONTAINER}/.env
+    volumes:
+    - ${PROJECT_ROOT}:${PROJECT_ROOT_CONTAINER}
+    - ${PACKAGE_DOCKER_FOLDER}:${PACKAGE_DOCKER_FOLDER_CONTAINER}
+    - ${PACKAGE_DOCKER_FOLDER}/scripts:/scripts
+    - ${PROJECT_DOCKER_FOLDER}/letsencrypt/${PROJECT_ENVIRONMENT}:/etc/letsencrypt
+    - ${PACKAGE_DOCKER_FOLDER}/nginx/php-fpm.conf:/etc/nginx/php-fpm.conf
+    - ${PACKAGE_DOCKER_FOLDER}/nginx/php-fpm-unprotected.conf:/etc/nginx/php-fpm-unprotected.conf
+    - ${PACKAGE_DOCKER_FOLDER}/nginx/conf.d:/etc/nginx/conf.d
+    - ${PACKAGE_DOCKER_FOLDER}/nginx/lua:/etc/nginx/lua
+    - ${PACKAGE_DOCKER_FOLDER}/nginx/snippets:/etc/nginx/snippets
+    - ${PROJECT_DOCKER_FOLDER}/nginx/logs:/var/log/nginx
+    networks:
+      common:
+        aliases:
+        - nginx
+
+networks:
+  common:
+    driver: bridge

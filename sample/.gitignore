@@ -1,6 +1,8 @@
 .env
 .env-*
 !.env-sample
+!.env-sample-dev
+!.env-sample-prod
 !.env-ci
 mysql/storage
 letsencrypt
