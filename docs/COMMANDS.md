@@ -9,6 +9,7 @@ List simple commands run in project root.
  - `composer server "logs server"` shown logs service `server`
  - `composer server-run server "ls -l"` create service `server`, run command `ls -l` inside container and remove service
  - `composer server-exec server "ls -l"` run command inside exist running service `server`
+ - `composer server-deploy-dev` deploy you code to remote server (add to your composer file `"server-deploy-prod": "vendor/bin/site-deploy.sh --env-file=docker/.env-dev"`)
  
 [See AWS commands](ENVIRONMENTS.md#auto-update-hosts-envs)
 

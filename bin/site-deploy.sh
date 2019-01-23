@@ -34,7 +34,7 @@ case ${i} in
     shift
     ;;
     -p=*|--project-path=*)
-    PROJECT_PATH="${i#*=}"
+    DEPLOY_PROJECT_PATH="${i#*=}"
     shift
     ;;
     -s=*|--strategy=*)
@@ -59,7 +59,7 @@ if [ -z "$DEPLOY_CONTAINER_NAME" ]; then
     exit 1;
 fi
 
-if [ -z "$PROJECT_PATH" ]; then
+if [ -z "$DEPLOY_PROJECT_PATH" ]; then
     echo -e "${COLOR_RED}Project path not found (--project-path).${COLOR_NONE}"
     exit 1;
 fi
@@ -82,13 +82,13 @@ echo -e "${COLOR_GREEN}Server: $DEPLOY_SERVER_NAME ${COLOR_NONE}"
 
 # Strategy 1 git pull
 if [ "$DEPLOY_STRATEGY" == 1 ]; then
-    ssh ${SERVER_NAME} "cd $PROJECT_PATH && git pull"
+    ssh ${SERVER_NAME} "cd $DEPLOY_PROJECT_PATH && git pull"
     exit 0
 fi
 
 # Strategy 2 git pull + docker container composer install
 if [ "$DEPLOY_STRATEGY" == 2 ]; then
-    ssh ${SERVER_NAME} "cd $PROJECT_PATH && git pull && docker exec ${DEPLOY_CONTAINER_ID} ${DEPLOY_DEFAULT_SHELL} -c 'composer install'"
+    ssh ${SERVER_NAME} "cd $DEPLOY_PROJECT_PATH && git pull && docker exec ${DEPLOY_CONTAINER_ID} ${DEPLOY_DEFAULT_SHELL} -c 'composer install'"
     exit 0
 fi
 
