@@ -69,38 +69,38 @@ if [ -z "$DEPLOY_STRATEGY" ]; then
     exit 1;
 fi
 
-DEPLOY_CONTAINER_ID=$(ssh ${SERVER_NAME} "docker ps -a --format 'table {{.ID}}' -f name=$DEPLOY_CONTAINER_NAME | sed -n 2p")
+DEPLOY_CONTAINER_ID=$(ssh -tt ${DEPLOY_SERVER_NAME} "docker ps -a --format 'table {{.ID}}' -f name=$DEPLOY_CONTAINER_NAME | sed -n 2p" | sed 's/[^0-9A-z]*//g')
 
 if [ -z "$DEPLOY_CONTAINER_NAME" ]; then
     echo -e "${COLOR_RED}Container id not found.${COLOR_NONE}"
     exit 1;
 fi
 
-echo -e "${COLOR_GREEN}Container id found: $DEPLOY_CONTAINER_ID ${COLOR_NONE}"
-echo -e "${COLOR_GREEN}Strategy: $DEPLOY_STRATEGY ${COLOR_NONE}"
-echo -e "${COLOR_GREEN}Server: $DEPLOY_SERVER_NAME ${COLOR_NONE}"
+echo -e "\n${COLOR_GREEN} Container id found: $DEPLOY_CONTAINER_ID ${COLOR_NONE}"
+echo -e "${COLOR_GREEN} Strategy: $DEPLOY_STRATEGY ${COLOR_NONE}"
+echo -e "${COLOR_GREEN} Server: $DEPLOY_SERVER_NAME ${COLOR_NONE}\n"
 
 # Strategy 1 git pull
 if [ "$DEPLOY_STRATEGY" == 1 ]; then
-    ssh ${SERVER_NAME} "cd $DEPLOY_PROJECT_PATH && git pull"
+    ssh -tt ${DEPLOY_SERVER_NAME} "cd $DEPLOY_PROJECT_PATH && git pull"
     exit 0
 fi
 
 # Strategy 2 git pull + docker container composer install
 if [ "$DEPLOY_STRATEGY" == 2 ]; then
-    ssh ${SERVER_NAME} "cd $DEPLOY_PROJECT_PATH && git pull && docker exec ${DEPLOY_CONTAINER_ID} ${DEPLOY_DEFAULT_SHELL} -c 'composer install'"
+    ssh -tt ${DEPLOY_SERVER_NAME} "cd $DEPLOY_PROJECT_PATH && git pull && docker exec ${DEPLOY_CONTAINER_ID} ${DEPLOY_DEFAULT_SHELL} -c 'composer install'"
     exit 0
 fi
 
 # Strategy 3 in docker container git pull
 if [ "$DEPLOY_STRATEGY" == 3 ]; then
-    ssh ${SERVER_NAME} "docker exec ${DEPLOY_CONTAINER_ID} ${DEPLOY_DEFAULT_SHELL} -c 'git pull'"
+    ssh -tt ${DEPLOY_SERVER_NAME} "docker exec ${DEPLOY_CONTAINER_ID} ${DEPLOY_DEFAULT_SHELL} -c 'git pull'"
     exit 0
 fi
 
 # Strategy 4 in docker container git pull + composer install
 if [ "$DEPLOY_STRATEGY" == 4 ]; then
-    ssh ${SERVER_NAME} "docker exec ${DEPLOY_CONTAINER_ID} ${DEPLOY_DEFAULT_SHELL} -c 'git pull && composer install'"
+    ssh -tt ${DEPLOY_SERVER_NAME} "docker exec ${DEPLOY_CONTAINER_ID} ${DEPLOY_DEFAULT_SHELL} -c 'git pull && composer install'"
     exit 0
 fi
 
