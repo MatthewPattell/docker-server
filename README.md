@@ -71,6 +71,7 @@ to the require section of your `composer.json` file.
 - AWS create/update "Task Definitions"
 - Auto update _/etc/hosts_ file on host machine
 - Auto create nginx proxies on host machine
+- Deploy
 - And etc.  
 
 ## LIFEHACKS

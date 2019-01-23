@@ -10,6 +10,7 @@
  - [Testing envs](#testing-envs)
  - [Auto update hosts file (host machine)](#auto-update-hosts-envs)
  - [Auto create nginx proxy (host machine)](#auto-create-proxy-envs)
+ - [Deploy](#deploy)
 
 ## <a id="domain-envs"></a>Domain envs (service: nginx, server)
 Property | Values | Description
@@ -138,3 +139,11 @@ Property | Values | Description
 ---------|--------|------------
 `AWS_UPDATE_TASK`| `(string)` | Create/update task definition on aws. Console command: `composer server-prod update-task`
 `AWS_UPDATE_ENV`| `(string)` | Create/update `.env` file on remote host. Console command: `composer server-prod update-env`
+
+## <a id="deploy"></a>Deploy
+Property | Values | Description
+---------|--------|------------
+`DEPLOY_SERVER_NAME`| `string` | SSH server name.
+`DEPLOY_CONTAINER_NAME`| `string` | Docker container name for deploy.
+`PROJECT_PATH`| `(string)` | Path to project folder in remote server.
+`DEPLOY_STRATEGY`| `(string)` `1-4` | See `site-deploy.sh` for more info

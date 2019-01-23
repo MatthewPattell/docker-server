@@ -2,7 +2,7 @@
   "name": "matthew-p/docker-server",
   "description": "Universal docker server, Nginx, PHP-FPM, MySql, Redis",
   "type": "package",
-  "keywords": ["docker","server","php","fpm","nginx","mysql","redis","docker-compose","universal","dynamic"],
+  "keywords": ["docker","server","php","fpm","nginx","mysql","redis","docker-compose","universal","dynamic","deploy","composer"],
   "license": "BSD-3-Clause",
   "authors": [
     {
@@ -10,5 +10,5 @@
       "email": "lukomi@mail.ru"
     }
   ],
-  "bin": ["bin/site-start.sh", "bin/site-exec.sh", "bin/site-run.sh", "bin/site-aws.sh"]
+  "bin": ["bin/site-start.sh", "bin/site-exec.sh", "bin/site-run.sh", "bin/site-aws.sh", "bin/site-deploy.sh"]
 }
