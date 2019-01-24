@@ -3,7 +3,7 @@ version: '2'
 services:
   server_test:
     extends:
-      file: docker-compose.yml
+      file: docker-compose.php-fpm.yml
       service: server
     depends_on:
       - server

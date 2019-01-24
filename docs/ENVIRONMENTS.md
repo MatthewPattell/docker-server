@@ -51,7 +51,7 @@ Property | Values | Description
 
 ## <a id="server-envs"></a>Server env (service: server)
 
-`-f !!docker-compose.yml` add to `SERVICES` (default: added)
+`-f !!docker-compose.nginx.yml` add to `SERVICES` (default: added)
 
 Property | Values | Description
 ---------|--------|------------
@@ -98,7 +98,7 @@ Property | Values | Description
 
 ## <a id="ssh-envs"></a>SSH env (service: server)
 
-`-f !!docker-compose.yml` add to `SERVICES` (default: added)
+`-f !!docker-compose.ssh.yml` add to `SERVICES`
 
 Property | Values | Description
 ---------|--------|------------
@@ -107,7 +107,7 @@ Property | Values | Description
 
 ## <a id="php-fpm-envs"></a>PHP-FPM env (service: server)
 
-`-f !!docker-compose.yml` add to `SERVICES` (default: added)
+`-f !!docker-compose.php-fpm.yml` add to `SERVICES` (default: added)
 
 Property | Values | Description
 ---------|--------|------------
@@ -117,7 +117,7 @@ Property | Values | Description
 
 ## <a id="testing-envs"></a>Testing env (service: server)
 
-`-f !!docker-compose.yml` add to `SERVICES` (default: added)  
+`-f !!docker-compose.tests.yml` add to `SERVICES` 
 See [example CI config](CI-EXAMPLE.md)
 
 Property | Values | Description
