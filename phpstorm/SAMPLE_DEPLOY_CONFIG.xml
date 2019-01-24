@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+    <configuration default="false" name="DEV FULL" type="BashConfigurationType" factoryName="Bash" folderName="DEPLOY">
+        <option name="INTERPRETER_OPTIONS" value="--" />
+        <option name="INTERPRETER_PATH" value="/usr/local/bin/composer" />
+        <option name="WORKING_DIRECTORY" value="" />
+        <option name="PARENT_ENVS" value="true" />
+        <option name="SCRIPT_NAME" value="server-deploy-dev" />
+        <option name="PARAMETERS" value="--server-name=SAMPLE --container-name=sample_server --project-path=/var/www/html/sample --strategy=2" />
+        <module name="" />
+        <method v="2" />
+    </configuration>
+</component>

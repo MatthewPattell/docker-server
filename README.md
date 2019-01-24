@@ -51,6 +51,9 @@ to the require section of your `composer.json` file.
 ## Environments && Commands
  - [See all available environments](docs/ENVIRONMENTS.md)
  - [See console commands](docs/COMMANDS.md)
+ 
+## PHPSTORM SAMPLES
+ - [Deploy config](phpstorm/SAMPLE_DEPLOY_CONFIG.xml)
 
 **FEATURES**
 ---
