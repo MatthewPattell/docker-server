@@ -1,4 +1,4 @@
-FROM matthewpatell/universal-docker-server-php-fpm:3.7
+FROM matthewpatell/universal-docker-server-php-fpm:3.8
 
 # Utils
 RUN apt-get update -y --fix-missing \
@@ -40,4 +40,4 @@ RUN apt-get update -y --fix-missing \
 # Install java
 RUN apt-get install -y default-jre
 
-CMD ["supervisord", "-n"]
+CMD service php7.1-fpm start && supervisord -n

@@ -13,6 +13,12 @@ bash /scripts/set-permissions.sh
 echo "export XDEBUG_CONFIG=\"${XDEBUG_CONFIG}\"" >> ~/.bashrc
 echo "export PHP_IDE_CONFIG=\"${PHP_IDE_CONFIG}"\" >> ~/.bashrc
 
+# php debug
+if [[ $PROJECT_ENVIRONMENT == "DEV" ]]; then
+    phpenmod xdebug
+    service php7.1-fpm restart
+fi
+
 # Set ssh access
 echo 'root:'$SSH_PASSWORD | chpasswd
 
@@ -47,10 +53,5 @@ if [ $RUN_SERVER_COMPOSER == "1" ]; then
 
     cd ${PROJECT_ROOT_CONTAINER} && composer install
 fi;
-
-# php debug
-if [[ $PROJECT_ENVIRONMENT == "DEV" ]]; then
-    phpenmod xdebug
-fi
 
 exit 0

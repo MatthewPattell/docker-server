@@ -104,9 +104,9 @@ to the require section of your `composer.json` file.
     
     - with server images:
 
-        ```docker run --rm --interactive --volume $PWD:/app matthewpatell/universal-docker-server:3.7 bash -c 'cd /app && composer install --no-scripts'```
+        ```docker run --rm --interactive --volume $PWD:/app matthewpatell/universal-docker-server:3.8 bash -c 'cd /app && composer install --no-scripts'```
         
     - with server image and additional global packages:
-        ```docker run --rm --interactive --volume $PWD:/app matthewpatell/universal-docker-server:3.7 bash -c 'cd /app && composer global require "fxp/composer-asset-plugin:^1.4.2" && composer global require "hirak/prestissimo:~0.3.7" && composer install --no-scripts'```
+        ```docker run --rm --interactive --volume $PWD:/app matthewpatell/universal-docker-server:3.8 bash -c 'cd /app && composer global require "fxp/composer-asset-plugin:^1.4.2" && composer global require "hirak/prestissimo:~0.3.7" && composer install --no-scripts'```
 
 That's all. Check it. :)

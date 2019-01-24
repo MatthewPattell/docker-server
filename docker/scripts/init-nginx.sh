@@ -134,5 +134,3 @@ for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.c
     done
 done
 
-# Run nginx with modules
-nginx -g 'daemon off;'

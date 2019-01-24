@@ -1,4 +1,4 @@
-# PHP-frpm docker container with PHP 7.1
+# PHP-fpm docker container with PHP 7.1
 * Ubuntu 18.04
 * PHP 7.1
 
