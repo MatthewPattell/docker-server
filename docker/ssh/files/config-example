@@ -1,4 +1,3 @@
 # Git server
 Host github.com
-RSAAuthentication yes
 IdentityFile ~/.ssh/site_deploy_key
