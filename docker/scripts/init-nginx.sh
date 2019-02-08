@@ -12,6 +12,8 @@ set -a
 . ${ENV_PATH}
 set +a
 
+bash /scripts/set-permissions.sh
+
 ENVIRONMENT=$(echo "$PROJECT_ENVIRONMENT" | tr '[:upper:]' '[:lower:]')
 
 # find patterns on config files: <tag-name>search-string</tag-name>
@@ -22,11 +24,6 @@ function findPattern {
 
     echo $(echo ${TEXT} | sed -n "s:.*<${PATTERN}>\(.*\)</${PATTERN}>.*:\1:p")
 }
-
-# get redis ip by host
-if [[ ! -z "$REDIS_HOST" ]]; then
-    export REDIS_IP=$(getent hosts "$REDIS_HOST" | cut -d" " -f1)
-fi
 
 # COPY nginx.conf
 NGINX_TEMPLATE_CODE=$(cat "${PACKAGE_DOCKER_FOLDER_CONTAINER}"/nginx/nginx.conf)
@@ -133,4 +130,3 @@ for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.c
         echo "${TEMPLATE_CODE}" >> ${TARGET_CONFIG_PATH}
     done
 done
-
