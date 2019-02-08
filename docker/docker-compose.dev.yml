@@ -4,6 +4,7 @@ services:
   nginx:
     depends_on:
       - redis
+      - server
 
   server:
     depends_on:
