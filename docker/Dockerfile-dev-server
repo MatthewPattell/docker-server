@@ -1,8 +1,10 @@
-FROM matthewpatell/universal-docker-server:3.8
+FROM matthewpatell/universal-docker-server:3.9
 
-# TODO: write script which will generate group of dockerfiles with same version
+# RUN apt-get update
 
 RUN apt-get install -y \
     php7.1-dev \
     php7.1-phpdbg \
     php-codesniffer
+
+RUN phpenmod xdebug

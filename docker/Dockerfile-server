@@ -37,7 +37,4 @@ RUN apt-get update -y --fix-missing \
     && apt-get install -y supervisor \
     && mkdir -p /var/log/supervisord
 
-# Install java
-RUN apt-get install -y default-jre
-
 CMD service php7.1-fpm start && supervisord -n

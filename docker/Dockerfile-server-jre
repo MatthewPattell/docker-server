@@ -1,0 +1,6 @@
+FROM matthewpatell/universal-docker-server:3.9
+
+# RUN apt-get update
+
+# Install java
+RUN apt-get install -y default-jre
