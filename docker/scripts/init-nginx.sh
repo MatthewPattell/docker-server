@@ -87,8 +87,8 @@ for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.c
         DOMAIN_1LVL=$(echo "${DOMAIN}" | sed -n "s/\([^\.]*\)\.\([^\.]*\)/\2/p")
         DOMAIN_2LVL=$(echo "${DOMAIN}" | sed -n "s/\([^\.]*\)\.\([^\.]*\)/\1/p")
 
-        if [ "$DOMAIN_DEFAULT" = "$DOMAIN" ]; then
-          DEFAULT_HOST="default_server"
+        if [ "$DOMAIN_DEFAULT" = "$DOMAIN" ] && [ "$NGINX_DEFAULT_HOST" != "yes" ]; then
+          DEFAULT_HOST=" default_server"
         else
           DEFAULT_HOST=""
         fi

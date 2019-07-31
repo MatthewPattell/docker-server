@@ -23,6 +23,7 @@ Property | Values | Description
 `DOMAIN_OPCACHE` | `(string)` `Default: not set` | Site opcache domain. (e.g. opcache.sample.io) 
 `DOMAIN_CUSTOM_NAME` | `(string)` | Custom domain name. Create nginx config with `# <domains-include>DOMAIN_COMMON</domains-include>` and `server_name  $COMMON_DOMAIN;` or copy from `vendor/matthew-p/docker-server/docker/nginx/templates/domain.conf` to `docker/nginx/conf-dynamic.d/custom.conf` and change. 
 `SSL_DOMAINS` | `(array)` `Default: not set` | Config letsencrypt ssl domains. Example: `SSL_DOMAINS[0]="admin@sample.io :sample.io api.sample.io admin.sample.io:"`
+`DOMAIN_DEFAULT` | `(string)` `Default: not set` | Set default server domain
 
 ## <a id="project-envs"></a>Project env (service: all)
 Property | Values | Description
