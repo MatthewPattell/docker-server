@@ -6,6 +6,7 @@ List simple commands run in project root.
  - `composer server up` run server [see more](https://docs.docker.com/compose/reference/up/)
  - `composer server down` stop server [see more](https://docs.docker.com/compose/reference/down/)
  - `composer server restart` sequential execution of commands `down` and `up`
+ - `composer server compile` only generate .env file
  - `composer server "logs server"` shown logs service `server`
  - `composer server-run server "ls -l"` create service `server`, run command `ls -l` inside container and remove service
  - `composer server-exec server "ls -l"` run command inside exist running service `server`

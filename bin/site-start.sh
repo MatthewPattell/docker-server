@@ -19,6 +19,11 @@ VENDOR_DIR=$(getVendorPath "${BASH_SOURCE[0]}")
 ACTION=$1
 DETACHED_MODE=$DEFAULT_DETACHED_MODE
 
+if [ "$ACTION" = "compile" ]; then
+    echo "Env file created success"
+    exit 0
+fi
+
 if [[ "${ACTION}" != "up" ]] && [ "$DETACHED_MODE" = "-d" ]; then
     DETACHED_MODE=""
 fi
