@@ -133,6 +133,7 @@ Property | Values | Description
 `HOST_NGINX_TEMPLATE_PATH`| `(string)` `Default: ${VENDOR_DIR}/conf/nginx-proxy.conf` | Template nginx proxy conf
 `HOST_NGINX_CONF_DIR`| `(string)` `Default: /usr/local/etc/nginx/servers` | Nginx configs dir on host machine
 `HOST_NGINX_RESTART_COMMAND`| `(string)` `Default: "sudo brew services restart nginx"` | Restart nginx command on host machine
+`NGINX_DEFAULT_HOST` | `yes`/`no` `Default: no` | Enable/disable default nginx host
 
 ## <a id="auto-update-hosts-envs"></a>Auto update hosts env (host machine)
 Property | Values | Description

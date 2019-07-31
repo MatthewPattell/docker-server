@@ -33,11 +33,16 @@ echo "${NGINX_TEMPLATE_CODE}" > /etc/nginx/nginx.conf
 # delete previous dynamic configs
 find /etc/nginx/conf-dynamic.d/ -name "*.conf" -type f -delete
 
+# add default host
+if [ "$NGINX_DEFAULT_HOST" = "yes" ]; then
+    cp /etc/nginx/templates/default.conf /etc/nginx/conf-dynamic.d/default.conf
+fi
+
 # create dynamic nginx configs
 for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.conf; do
     TARGET_CONFIG_PATH=/etc/nginx/conf-dynamic.d/$(basename ${TEMPLATE_NAME})
     # Remove old file
-    [[ -f file ]] && rm ${TARGET_CONFIG_PATH}
+    [[ -f file ]] && rm "${TARGET_CONFIG_PATH}"
 
     # get template content
     BASE_TEMPLATE_CODE=$(cat ${TEMPLATE_NAME})
@@ -82,6 +87,12 @@ for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.c
         DOMAIN_1LVL=$(echo "${DOMAIN}" | sed -n "s/\([^\.]*\)\.\([^\.]*\)/\2/p")
         DOMAIN_2LVL=$(echo "${DOMAIN}" | sed -n "s/\([^\.]*\)\.\([^\.]*\)/\1/p")
 
+        if [ "$DOMAIN_DEFAULT" = "$DOMAIN" ]; then
+          DEFAULT_HOST="default_server"
+        else
+          DEFAULT_HOST=""
+        fi
+
         TEMPLATE_CODE="${BASE_TEMPLATE_CODE}"
         TEMPLATE_CODE="${TEMPLATE_CODE//\$COMMON_DOMAIN/$DOMAIN}"
         TEMPLATE_CODE="${TEMPLATE_CODE//\$ENVIRONMENT/$ENVIRONMENT}"
@@ -90,6 +101,7 @@ for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.c
         TEMPLATE_CODE="${TEMPLATE_CODE//\$PARSED_DOMAINS/$ONLY_DOMAINS}"
         TEMPLATE_CODE="${TEMPLATE_CODE//\$ROOT_PATH/$REPLACE_ROOT}"
         TEMPLATE_CODE="${TEMPLATE_CODE//\$CUSTOM_SNIPPETS/$REPLACE_CUSTOM_SNIPPETS}"
+        TEMPLATE_CODE="${TEMPLATE_CODE//\$DEFAULT/$DEFAULT_HOST}"
 
         for i in ${!SSL_DOMAINS[*]}; do
             LIST_CERTIFICATE_DOMAINS=$(echo "${SSL_DOMAINS[$i]}" | cut -d ':' -f 2)
@@ -127,6 +139,6 @@ for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.c
 
         TEMPLATE_CODE="${TEMPLATE_CODE//\$SSL_INCLUDE/$SSL_DIRECTIVE}"
 
-        echo "${TEMPLATE_CODE}" >> ${TARGET_CONFIG_PATH}
+        echo "${TEMPLATE_CODE}" >> "${TARGET_CONFIG_PATH}"
     done
 done
