@@ -6,6 +6,9 @@ services:
     hostname: ${REDIS_HOST}
     container_name: ${COMPOSE_PROJECT_NAME}_redis
     command: ["redis-server", "/usr/local/etc/redis/redis.conf", "--requirepass", "${REDIS_PASSWORD}"]
+    labels:
+      project: ${PROJECT_NAME}
+      container: ${COMPOSE_PROJECT_NAME}_redis
     volumes:
       - ${PACKAGE_DOCKER_FOLDER}/redis/config/redis.conf:/usr/local/etc/redis/redis.conf
       - ${PROJECT_DOCKER_FOLDER}/redis/storage:/data

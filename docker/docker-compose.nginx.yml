@@ -7,6 +7,9 @@ services:
     hostname: nginx
     environment:
       ENV_PATH: ${PROJECT_DOCKER_FOLDER_CONTAINER}/.env
+    labels:
+      project: ${PROJECT_NAME}
+      container: ${COMPOSE_PROJECT_NAME}_nginx
     volumes:
     - ${PROJECT_ROOT}:${PROJECT_ROOT_CONTAINER}
     - ${PACKAGE_DOCKER_FOLDER}:${PACKAGE_DOCKER_FOLDER_CONTAINER}

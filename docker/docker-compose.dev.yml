@@ -5,8 +5,12 @@ services:
     depends_on:
       - redis
       - server
+    labels:
+      stagging: yes
 
   server:
     depends_on:
       - mysql
       - redis
+    labels:
+      stagging: yes

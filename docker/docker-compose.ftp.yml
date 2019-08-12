@@ -17,6 +17,9 @@ services:
       - SUBJ_O=${FTP_SUBJECT_ORGANIZATION}
       - SUBJ_CN=${FTP_SUBJECT_DOMAIN}
       - FTP_DB_TABLE_NAME=${FTP_DB_TABLE_NAME}
+    labels:
+      project: ${PROJECT_NAME}
+      container: ${COMPOSE_PROJECT_NAME}_ftp
     ports:
       - ${FTP_PORT_BIND}:21
       - ${FTP_PASSIVE_PORT_1}:30000

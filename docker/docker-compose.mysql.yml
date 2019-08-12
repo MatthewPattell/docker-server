@@ -10,6 +10,9 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    labels:
+      project: ${PROJECT_NAME}
+      container: ${COMPOSE_PROJECT_NAME}_mysql
     volumes:
       - ${PACKAGE_DOCKER_FOLDER}/mysql/my.cnf:/etc/mysql/conf.d/mysql.cnf
       - ${PROJECT_DOCKER_FOLDER}/mysql/storage:/var/lib/mysql

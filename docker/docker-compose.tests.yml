@@ -9,6 +9,8 @@ services:
       - server
       - nginx
     container_name: ${COMPOSE_PROJECT_NAME}_server_test
+    labels:
+      tests: yes
     networks:
       common:
         aliases:

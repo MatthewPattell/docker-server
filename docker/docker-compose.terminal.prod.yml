@@ -5,6 +5,9 @@ services:
     hostname: terminal
     image: ${TERMINAL_REPOSITORY}
     container_name: ${COMPOSE_PROJECT_NAME}_terminal
+    labels:
+      project: ${PROJECT_NAME}
+      terminal: yes
     mem_limit: 568500000
     networks:
       common:
