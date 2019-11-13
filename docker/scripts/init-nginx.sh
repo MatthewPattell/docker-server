@@ -28,6 +28,7 @@ function findPattern {
 # COPY nginx.conf
 NGINX_TEMPLATE_CODE=$(cat "${PACKAGE_DOCKER_FOLDER_CONTAINER}"/nginx/nginx.conf)
 NGINX_TEMPLATE_CODE="${NGINX_TEMPLATE_CODE//\$ENVIRONMENT/$PROJECT_ENVIRONMENT}"
+NGINX_TEMPLATE_CODE="${NGINX_TEMPLATE_CODE//\$NGINX_LIMIT_KEY/$NGINX_LIMIT_KEY}"
 echo "${NGINX_TEMPLATE_CODE}" > /etc/nginx/nginx.conf
 
 # delete previous dynamic configs

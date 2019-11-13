@@ -1,6 +1,6 @@
 # Recommended config for Mac OS
 
-Contains your env file **docker/.env-local**:
+Contains your env file **docker/.env.local**:
 ```dotenv
 # ENVIRONMENT (PROD/DEV)
 PROJECT_ENVIRONMENT=DEV

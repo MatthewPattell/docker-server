@@ -43,9 +43,16 @@ elif [ "$ACTION" = "init" ]; then
 
     if [ ! -d "$TARGET_DIR" ]; then
         cp -r "$VENDOR_DIR/sample" "$TARGET_DIR/"
-        mv "$TARGET_DIR/.env-sample" "$TARGET_DIR/.env-local"
-        mv "$TARGET_DIR/.env-sample-prod" "$TARGET_DIR/.env-prod"
+        mv "$TARGET_DIR/.env-sample" "$TARGET_DIR/.env.local"
+        mv "$TARGET_DIR/.env-sample-prod" "$TARGET_DIR/.env.prod"
         mv "$TARGET_DIR/docker-compose.local-sample.yml" "$TARGET_DIR/docker-compose.local.yml"
+
+        RANDKEY=$(env LC_CTYPE=C LC_ALL=C tr -dc "a-zA-Z0-9" < /dev/urandom | head -c 10; echo)
+
+        for file in .env.local .env.prod; do
+            sed -i "" "s/change_this_string/$RANDKEY/g" "$TARGET_DIR/$file"
+        done
+
         echo "Server init success."
         echo "Change root-path in: $TARGET_DIR/nginx/conf-dynamic.d/sample.conf"
     else

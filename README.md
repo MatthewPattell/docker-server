@@ -27,21 +27,21 @@ to the require section of your `composer.json` file.
     ```json
     ...
     "scripts": {
-        "server": "vendor/bin/site-start.sh --env-file=docker/.env-local",
-        "server-run": "vendor/bin/site-run.sh --env-file=docker/.env-local",
-        "server-exec": "vendor/bin/site-exec.sh --env-file=docker/.env-local",
+        "server": "vendor/bin/site-start.sh --env-file=docker/.env.local",
+        "server-run": "vendor/bin/site-run.sh --env-file=docker/.env.local",
+        "server-exec": "vendor/bin/site-exec.sh --env-file=docker/.env.local",
      
         // (optional)
-        "server-prod": "vendor/bin/site-aws.sh --env-file=docker/.env-prod",
+        "server-prod": "vendor/bin/site-aws.sh --env-file=docker/.env.prod",
         // (optional)
-        "server-deploy-dev": "vendor/bin/site-deploy.sh --env-file=docker/.env-dev"
+        "server-deploy-dev": "vendor/bin/site-deploy.sh --env-file=docker/.env.dev"
     }
     ...
     ```
-    where **"docker/.env-local"** relative path to your local env config _(will be created in next step)_.
+    where **"docker/.env.local"** relative path to your local env config _(will be created in next step)_.
 2. Run: ```composer server init```. This will create a **docker** folder in your project root directory.
 3. Change **root-path** in _docker/nginx/conf-dynamic.d/sample.conf_
-4. See [supported os](#supported-os) and config **docker/.env-local** according to your operating system
+4. See [supported os](#supported-os) and config **docker/.env.local** according to your operating system
 5. Run server: ```composer server up ```
 
 ## Supported OS
@@ -67,7 +67,7 @@ to the require section of your `composer.json` file.
 
 **FEATURES**
 ---
-- Multiple config: ```vendor/bin/site-start.sh --env-file=docker/.env-dev,docker/.env-local```
+- Multiple config: ```vendor/bin/site-start.sh --env-file=docker/.env.dev,docker/.env.local```
 - Use environment, extends, overriding between configs
     ```
     // Simple usage
@@ -106,7 +106,7 @@ to the require section of your `composer.json` file.
     OR see below **static network layer**
   
 - **Add static network layer** _(only for Linux)_
-    1. Change **SERVICES** variable in your local env (docker/.env-local) to:
+    1. Change **SERVICES** variable in your local env (docker/.env.local) to:
         ```
         SERVICES="$SERVICES -f docker/docker-compose.common.yml -f docker/docker-compose.static-network.yml"
         ```
