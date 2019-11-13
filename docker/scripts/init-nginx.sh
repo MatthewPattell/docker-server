@@ -25,6 +25,8 @@ function findPattern {
     echo $(echo ${TEXT} | sed -n "s:.*<${PATTERN}>\(.*\)</${PATTERN}>.*:\1:p")
 }
 
+mkdir -p /tmp/nginx/cache
+
 # COPY nginx.conf
 NGINX_TEMPLATE_CODE=$(cat "${PACKAGE_DOCKER_FOLDER_CONTAINER}"/nginx/nginx.conf)
 NGINX_TEMPLATE_CODE="${NGINX_TEMPLATE_CODE//\$ENVIRONMENT/$PROJECT_ENVIRONMENT}"
