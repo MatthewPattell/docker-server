@@ -18,6 +18,7 @@ services:
     - ${PACKAGE_DOCKER_FOLDER}/nginx/php-fpm.conf:/etc/nginx/php-fpm.conf
     - ${PACKAGE_DOCKER_FOLDER}/nginx/php-fpm-nolimit.conf:/etc/nginx/php-fpm-nolimit.conf
     - ${PACKAGE_DOCKER_FOLDER}/nginx/php-fpm-cache.conf:/etc/nginx/php-fpm-cache.conf
+    - ${PACKAGE_DOCKER_FOLDER}/nginx/php-fpm-nolimit-cache.conf:/etc/nginx/php-fpm-nolimit-cache.conf
     - ${PACKAGE_DOCKER_FOLDER}/nginx/conf.d:/etc/nginx/conf.d
     - ${PACKAGE_DOCKER_FOLDER}/nginx/lua:/etc/nginx/lua
     - ${PACKAGE_DOCKER_FOLDER}/nginx/snippets:/etc/nginx/snippets
