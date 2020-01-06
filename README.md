@@ -25,13 +25,13 @@ to the require section of your `composer.json` file.
 
 1. Add or update section **scripts** in **composer.json**:
 
-    ```json
+    ```json5
     {
         "scripts": {
             "server": "vendor/bin/site-start.sh --env-file=docker/.env-local",
             "server-run": "vendor/bin/site-run.sh --env-file=docker/.env-local",
             "server-exec": "vendor/bin/site-exec.sh --env-file=docker/.env-local",
-         
+
             // (optional)
             "server-prod": "vendor/bin/site-aws.sh --env-file=docker/.env-prod",
             // (optional)
