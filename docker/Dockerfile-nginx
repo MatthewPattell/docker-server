@@ -1,16 +1,16 @@
-FROM alpine:3.8
+FROM alpine:3.11
 
 MAINTAINER Matthew Patell <lukomi@mail.ru>
 
-ENV NGINX_VERSION 1.15.7
+ENV NGINX_VERSION 1.17.6
 
-ENV DEVEL_KIT_MODULE_VERSION 0.3.0
-ENV LUA_MODULE_VERSION 0.10.12rc2
+ENV DEVEL_KIT_MODULE_VERSION 0.3.1
+ENV LUA_MODULE_VERSION 0.10.15
 
 ENV LUAJIT_LIB=/usr/lib
 ENV LUAJIT_INC=/usr/include/luajit-2.1
 
-ENV LUA_REDIS_VERSION 0.26
+ENV LUA_REDIS_VERSION 0.27
 
 RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
     && CONFIG="\
@@ -162,7 +162,9 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
     && ln -sf /dev/stderr /var/log/nginx/error.log \
     \
     # dynamic configs
+    # TODO: set correct (non-root) permissions on folders.
     && mkdir /etc/nginx/conf-dynamic.d \
+    && mkdir /etc/nginx/web \
     \
     # other packages
     && apk add --no-cache bash
