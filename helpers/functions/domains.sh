@@ -5,8 +5,8 @@ function dockerDomains() {
     RESULT=""
 
     for env_name in "${D_ENVS[@]}"; do
-       RESULT="$RESULT ${!env_name}"
+        RESULT="$RESULT ${!env_name}"
     done
 
-    echo $RESULT
+    echo "$RESULT"
 }
