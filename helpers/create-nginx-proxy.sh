@@ -33,7 +33,20 @@ NGINX_TEMPLATE_CODE="${NGINX_TEMPLATE_CODE//\$PORT/$NGINX_PROXY_PORT}"
 NGINX_TEMPLATE_CODE="${NGINX_TEMPLATE_CODE//\$DOMAINS/$NGINX_DOMAIN_PROXIES}"
 NGINX_TEMPLATE_CODE="${NGINX_TEMPLATE_CODE//\$CONTAINER_IP/$HOST_ETC_HOSTS_IP}"
 
-if [[ ! -f "$NGINX_CONF_PATH" ]] || [[ $(<"$NGINX_CONF_PATH") != "$NGINX_TEMPLATE_CODE" ]]; then
+# check whether nginx config exists && is writable
+if [[ ! -f "$NGINX_CONF_PATH" ]]; then
+    if [[ -w "$NGINX_CONF_PATH" ]]; then
+        touch "$NGINX_CONF_PATH"
+    else
+        sudo touch "$NGINX_CONF_PATH"
+    fi
+fi
+
+if [[ ! -w "$NGINX_CONF_PATH" ]]; then
+    sudo chown $(id -u):$(id -g) "$NGINX_CONF_PATH"
+fi
+
+if [[ $(<"$NGINX_CONF_PATH") != "$NGINX_TEMPLATE_CODE" ]]; then
     # Create proxy config
     echo "$NGINX_TEMPLATE_CODE" >"$NGINX_CONF_PATH"
     # Restart host nginx
