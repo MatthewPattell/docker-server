@@ -62,7 +62,7 @@ to the require section of your `composer.json` file.
  
 ## Latest docker images
  - NGINX
-    - matthewpatell/universal-docker-nginx:3.5
+    - matthewpatell/universal-docker-nginx:3.6
  - SERVER
     - matthewpatell/universal-docker-server:3.9
     - matthewpatell/universal-docker-server:3.9-dev
