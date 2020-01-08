@@ -9,7 +9,7 @@ set -o nounset # exit when tries to use undeclared variables.
 
 # Export environment to OS
 set -a
-. ${ENV_PATH}
+. "$ENV_PATH"
 set +a
 
 bash /scripts/set-permissions.sh
@@ -43,15 +43,15 @@ fi
 
 # create dynamic nginx configs
 for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.conf; do
-    TARGET_CONFIG_PATH=/etc/nginx/conf-dynamic.d/$(basename ${TEMPLATE_NAME})
+    TARGET_CONFIG_PATH=/etc/nginx/conf-dynamic.d/$(basename "$TEMPLATE_NAME")
     # Remove old file
     [[ -f file ]] && rm "${TARGET_CONFIG_PATH}"
 
     # get template content
-    BASE_TEMPLATE_CODE=$(cat ${TEMPLATE_NAME})
+    BASE_TEMPLATE_CODE=$(cat "$TEMPLATE_NAME")
 
     # copy template
-    TEMPLATE_PATH=$(findPattern "template" "${BASE_TEMPLATE_CODE}")
+    TEMPLATE_PATH=$(findPattern "template" "$BASE_TEMPLATE_CODE")
 
     if [[ ! -z "${TEMPLATE_PATH}" ]]; then
         if [[ ! -f "${TEMPLATE_PATH}" ]]; then
@@ -59,7 +59,7 @@ for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.c
         fi
 
         # get template code without comments (if "copy template" directive exist)
-        BASE_TEMPLATE_CODE=$(echo -e "$BASE_TEMPLATE_CODE \n\n$(grep -o '^[^#]*' ${TEMPLATE_PATH})")
+        BASE_TEMPLATE_CODE=$(echo -e "$BASE_TEMPLATE_CODE \n\n$(grep -o '^[^#]*' "$TEMPLATE_PATH")")
     fi
 
     # allow domain
@@ -81,10 +81,10 @@ for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.c
     echo "" >> "${TARGET_CONFIG_PATH}"
 
     # root path
-    REPLACE_ROOT=$(findPattern "root-path" "${BASE_TEMPLATE_CODE}")
+    REPLACE_ROOT=$(findPattern "root-path" "$BASE_TEMPLATE_CODE}")
 
     # custom snippets
-    REPLACE_CUSTOM_SNIPPETS=$(findPattern "custom-snippets" "${BASE_TEMPLATE_CODE}")
+    REPLACE_CUSTOM_SNIPPETS=$(findPattern "custom-snippets" "$BASE_TEMPLATE_CODE}")
 
     for DOMAIN in ${ONLY_DOMAINS}; do
         DOMAIN_1LVL=$(echo "${DOMAIN}" | sed -n "s/\([^\.]*\)\.\([^\.]*\)/\2/p")

@@ -2,7 +2,7 @@
 
 # Export environment to OS
 set -a
-. ${ENV_PATH}
+. "$ENV_PATH"
 set +a
 
 # get redis ip by host

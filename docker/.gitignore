@@ -1,10 +1,13 @@
 .idea
-.env
-.env-*
+.env*
 !.env-sample
 !.env-default
 !.env-ci
 mysql/storage
+letsencrypt
+redis/storage
+*logs*
 ssh/authorized_keys
 ssh/config
 ssh/*_key
+docker-compose.local.yml
