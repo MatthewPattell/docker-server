@@ -1,8 +1,8 @@
-# PHP-fpm docker container with PHP 7.1
+# PHP-fpm docker container with PHP 7.4
 * Ubuntu 18.04
-* PHP 7.1
+* PHP 7.4
 
-# PHP docker container with PHP 7.1
+# PHP docker container with PHP 7.4
 * Extends PHP-fpm image
 * SSH
 * Certbot

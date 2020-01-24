@@ -18,10 +18,10 @@ List simple commands run in project root.
  - `nginx -s reload` reload all configs (use after run `/scripts/init-nginx.sh`)
  
 # PHP-FPM container
- - `service php7.1 start|stop|status|restart|reload|force-reload` php-fpm commands
+ - `service php7.4start|stop|status|restart|reload|force-reload` php-fpm commands
  
 # Server container
- - `service php7.1 start|stop|status|restart|reload|force-reload` php-fpm commands
+ - `service php7.4 start|stop|status|restart|reload|force-reload` php-fpm commands
  - `supervisorctl status` status all supervisor services
  - `supervisorctl stop all` stop all supervisor services
  - `supervisorctl start all` start all supervisor services

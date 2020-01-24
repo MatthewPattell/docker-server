@@ -1,4 +1,4 @@
-FROM matthewpatell/universal-docker-server:3.9
+FROM matthewpatell/universal-docker-server:4.0
 
 # RUN apt-get update
 

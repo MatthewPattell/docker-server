@@ -1,10 +1,10 @@
-FROM matthewpatell/universal-docker-server:3.9
+FROM matthewpatell/universal-docker-server:4.0
 
 # RUN apt-get update
 
 RUN apt-get install -y \
-    php7.1-dev \
-    php7.1-phpdbg \
+    php${PHP_VERSION}-dev \
+    php${PHP_VERSION}-phpdbg \
     php-codesniffer
 
 RUN phpenmod xdebug

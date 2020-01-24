@@ -64,11 +64,11 @@ to the require section of your `composer.json` file.
  - NGINX
     - matthewpatell/universal-docker-nginx:3.6
  - SERVER
-    - matthewpatell/universal-docker-server:3.9
-    - matthewpatell/universal-docker-server:3.9-dev
-    - matthewpatell/universal-docker-server:3.9-jre (with java)
+    - matthewpatell/universal-docker-server:4.0
+    - matthewpatell/universal-docker-server:4.0-dev
+    - matthewpatell/universal-docker-server:4.0-jre (with java)
  - PHP-FPM:
-    - matthewpatell/universal-docker-server-php-fpm:3.8
+    - matthewpatell/universal-docker-server-php-fpm:4.0
 
 **FEATURES**
 ---
@@ -131,13 +131,13 @@ to the require section of your `composer.json` file.
     - with server images:
 
     ```bash
-    docker run --rm --interactive --volume $PWD:/app matthewpatell/universal-docker-server:3.8 bash -c 'cd /app && composer install --no-scripts'
+    docker run --rm --interactive --volume $PWD:/app matthewpatell/universal-docker-server:4.0 bash -c 'cd /app && composer install --no-scripts'
     ```
         
     - with server image and additional global packages:
         
     ```bash
-    docker run --rm --interactive --volume $PWD:/app matthewpatell/universal-docker-server:3.8 bash -c 'cd /app && composer global require "fxp/composer-asset-plugin:^1.4.2" && composer global require "hirak/prestissimo:~0.3.7" && composer install --no-scripts'
+    docker run --rm --interactive --volume $PWD:/app matthewpatell/universal-docker-server:4.0 bash -c 'cd /app && composer global require "fxp/composer-asset-plugin:^1.4.2" && composer global require "hirak/prestissimo:~0.3.7" && composer install --no-scripts'
     ```
     
 - Use git-container instead of git itself

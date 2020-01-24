@@ -1,4 +1,4 @@
-FROM matthewpatell/universal-docker-server-php-fpm:3.8
+FROM matthewpatell/universal-docker-server-php-fpm:4.0
 
 # Utils
 RUN apt-get update -y --fix-missing \
@@ -37,4 +37,4 @@ RUN apt-get update -y --fix-missing \
     && apt-get install -y supervisor \
     && mkdir -p /var/log/supervisord
 
-CMD service php7.1-fpm start && supervisord -n
+CMD service php${PHP_VERSION}-fpm start && supervisord -n

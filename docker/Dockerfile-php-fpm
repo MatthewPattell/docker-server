@@ -4,6 +4,8 @@ MAINTAINER Matthew Patell <lukomi@mail.ru>
 # Setup environment
 ENV DEBIAN_FRONTEND noninteractive
 
+ENV PHP_VERSION 7.4
+
 RUN apt-get update -y --fix-missing \
     # Images utils
     && apt-get install -y libjpeg-progs jpegoptim pngquant librsvg2-2 libfcgi0ldbl \
@@ -15,38 +17,38 @@ RUN apt-get update -y --fix-missing \
     && apt-get update -y --fix-missing \
     # PHP
     && apt-get install -y --allow-unauthenticated \
-            php7.1 php7.1-fpm php7.1-cgi php7.1-cli php7.1-common \
-            php7.1-bcmath php7.1-curl php7.1-dba php7.1-enchant \
-            php7.1-gd php7.1-gmp php-imagick \
-            php7.1-imap php7.1-interbase \
-            php7.1-intl php7.1-json php7.1-ldap \
-            php7.1-mbstring \
-            php7.1-mysql php7.1-odbc php7.1-pgsql php7.1-sqlite3 \
-            php7.1-opcache php7.1-pspell php7.1-readline \
-            php7.1-recode php7.1-snmp php7.1-soap \
-            php7.1-sybase php7.1-tidy \
-            php7.1-xml php7.1-xmlrpc php7.1-xsl \
-            php7.1-zip php7.1-bz2 \
-            php7.1-dev php7.1-xdebug \
+            php${PHP_VERSION} php${PHP_VERSION}-fpm php${PHP_VERSION}-cgi php${PHP_VERSION}-cli php${PHP_VERSION}-common \
+            php${PHP_VERSION}-bcmath php${PHP_VERSION}-curl php${PHP_VERSION}-dba php${PHP_VERSION}-enchant \
+            php${PHP_VERSION}-gd php${PHP_VERSION}-gmp php-imagick \
+            php${PHP_VERSION}-imap php${PHP_VERSION}-interbase \
+            php${PHP_VERSION}-intl php${PHP_VERSION}-json php${PHP_VERSION}-ldap \
+            php${PHP_VERSION}-mbstring \
+            php${PHP_VERSION}-mysql php${PHP_VERSION}-odbc php${PHP_VERSION}-pgsql php${PHP_VERSION}-sqlite3 \
+            php${PHP_VERSION}-opcache php${PHP_VERSION}-pspell php${PHP_VERSION}-readline \
+            php${PHP_VERSION}-snmp php${PHP_VERSION}-soap \
+            php${PHP_VERSION}-sybase php${PHP_VERSION}-tidy \
+            php${PHP_VERSION}-xml php${PHP_VERSION}-xmlrpc php${PHP_VERSION}-xsl \
+            php${PHP_VERSION}-zip php${PHP_VERSION}-bz2 \
+            php${PHP_VERSION}-dev php${PHP_VERSION}-xdebug \
     # Pecl extensions
     # yaml
     && apt-get install -y libyaml-dev \
-    && printf "\n" | pecl install yaml-2.0.0 \
-    && echo "extension=yaml.so" >> /etc/php/7.1/mods-available/yaml.ini \
+    && printf "\n" | pecl install yaml-2.0.4 \
+    && echo "extension=yaml.so" >> /etc/php/${PHP_VERSION}/mods-available/yaml.ini \
     && phpenmod yaml \
     # Xdebug default disable
     && phpdismod xdebug \
     # Cleaup
-    && apt-get remove -y php7.1-dev gnupg \
+    && apt-get remove -y php${PHP_VERSION}-dev gnupg \
     && apt-get -y autoremove && apt-get autoclean
 
 # Copy start script
-COPY php/php7.1-fpm /etc/init.d/php7.1-fpm
+COPY php/php${PHP_VERSION}-fpm /etc/init.d/php${PHP_VERSION}-fpm
 # Set correct permission
-RUN chmod 0755 /etc/init.d/php7.1-fpm
+RUN chmod 0755 /etc/init.d/php${PHP_VERSION}-fpm
 
-RUN update-rc.d php7.1-fpm defaults
+RUN update-rc.d php${PHP_VERSION}-fpm defaults
 
 EXPOSE 9000
 
-CMD service php7.1-fpm start && tail -f /var/log/php7.1-fpm/fpm.log
+CMD service php${PHP_VERSION}-fpm start && tail -f /var/log/php${PHP_VERSION}-fpm/fpm.log
