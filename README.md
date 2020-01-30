@@ -1,6 +1,6 @@
 Universal docker server
 ===========================
-Nginx, PHP-FPM, MySql, Redis
+Nginx (1.17.8), PHP (7.4), MySql (5.7), Redis (5.0.7)
 
 Installation
 ------------
@@ -10,13 +10,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```bash
-php composer.phar require --prefer-dist matthew-p/docker-server "@dev"
+php composer.phar require --prefer-dist matthew-p/docker-server "^4.10.0"
 ```
 
 or add
 
 ```
-"matthew-p/docker-server": "@dev"
+"matthew-p/docker-server": "^4.10.0"
 ```
 
 to the require section of your `composer.json` file.
@@ -62,7 +62,7 @@ to the require section of your `composer.json` file.
  
 ## Latest docker images
  - NGINX
-    - matthewpatell/universal-docker-nginx:3.6
+    - matthewpatell/universal-docker-nginx:3.7
  - SERVER
     - matthewpatell/universal-docker-server:4.0
     - matthewpatell/universal-docker-server:4.0-dev

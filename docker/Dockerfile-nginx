@@ -2,13 +2,17 @@ FROM alpine:3.11
 
 MAINTAINER Matthew Patell <lukomi@mail.ru>
 
-ENV NGINX_VERSION 1.17.6
+ENV NGINX_VERSION 1.17.8
 
 ENV DEVEL_KIT_MODULE_VERSION 0.3.1
 ENV LUA_MODULE_VERSION 0.10.15
 
-ENV LUAJIT_LIB=/usr/lib
-ENV LUAJIT_INC=/usr/include/luajit-2.1
+ENV LUA_RESTY_CORE 0.1.17
+ENV LUA_RESTY_LRUCACHE 0.09
+
+ENV LUAJIT_LIB=/usr/local/lib
+ENV LUAJIT_INC=/usr/local/include/luajit-2.1
+ENV LUAJIT_VERSION 2.1.0-beta3
 
 ENV LUA_REDIS_VERSION 0.27
 
@@ -66,6 +70,7 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
     && apk add --no-cache --virtual .build-deps \
         gcc \
         libc-dev \
+        libgcc \
         make \
         openssl-dev \
         pcre-dev \
@@ -76,9 +81,16 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
         libxslt-dev \
         gd-dev \
         geoip-dev \
-        luajit-dev \
         perl-dev \
         git \
+    # Install LuaJIT
+    && wget -O LuaJIT.tar.gz https://luajit.org/download/LuaJIT-${LUAJIT_VERSION}.tar.gz \
+    && tar -xf LuaJIT.tar.gz \
+    && rm LuaJIT.tar.gz \
+    && cd LuaJIT-${LUAJIT_VERSION} \
+    && make \
+    && make install \
+    && rm -rf LuaJIT-${LUAJIT_VERSION} \
     && curl -fSL https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz -o nginx.tar.gz \
     && curl -fSL https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz.asc  -o nginx.tar.gz.asc \
     && curl -fSL https://github.com/simpl/ngx_devel_kit/archive/v$DEVEL_KIT_MODULE_VERSION.tar.gz -o ndk.tar.gz \
@@ -132,6 +144,21 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
     && ln -s ../../usr/lib/nginx/modules /etc/nginx/modules \
     && strip /usr/sbin/nginx* \
     && strip /usr/lib/nginx/modules/*.so \
+    # Install resty core and lrucache
+    && cd /tmp \
+    && wget -O lua_resty_core.tar.gz https://github.com/openresty/lua-resty-core/archive/v${LUA_RESTY_CORE}.tar.gz \
+    && wget -O lua_resty_lrucache.tar.gz https://github.com/openresty/lua-resty-lrucache/archive/v${LUA_RESTY_LRUCACHE}.tar.gz \
+    && tar -xf lua_resty_core.tar.gz \
+    && tar -xf lua_resty_lrucache.tar.gz \
+    && rm lua_resty_core.tar.gz lua_resty_lrucache.tar.gz \
+    && cd lua-resty-core-${LUA_RESTY_CORE} \
+    && make install \
+    && cd /tmp/lua-resty-lrucache-${LUA_RESTY_LRUCACHE} \
+    && make install \
+    && ln -s /usr/local/lib/lua/resty /usr/local/share/lua/5.1/resty \
+    && ln -s /usr/local/lib/lua/ngx /usr/local/share/lua/5.1/ngx \
+    && rm -rf /tmp/lua-resty-core-${LUA_RESTY_CORE} \
+    && rm -rf /tmp/lua-resty-lrucache-${LUA_RESTY_LRUCACHE} \
     && rm -rf /usr/src/nginx-$NGINX_VERSION \
     && rm -rf /tmp/ngx_brotli \
     \
@@ -167,6 +194,6 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
     && mkdir /etc/nginx/web \
     \
     # other packages
-    && apk add --no-cache bash
+    && apk add --no-cache bash libgcc
 
 CMD /scripts/init-nginx.sh && /scripts/start-nginx.sh && tail -f /var/log/nginx/error.log

@@ -2,7 +2,7 @@ version: '2'
 
 services:
   redis:
-    image: redis:4
+    image: redis:5
     hostname: ${REDIS_HOST}
     container_name: ${COMPOSE_PROJECT_NAME}_redis
     command: ["redis-server", "/usr/local/etc/redis/redis.conf", "--requirepass", "${REDIS_PASSWORD}"]
