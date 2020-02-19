@@ -47,7 +47,9 @@ elif [ "$ACTION" = "init" ]; then
         mv "$TARGET_DIR/.env-sample-prod" "$TARGET_DIR/.env.prod"
         mv "$TARGET_DIR/docker-compose.local-sample.yml" "$TARGET_DIR/docker-compose.local.yml"
 
-        RANDKEY=$(env LC_CTYPE=C LC_ALL=C tr -dc "a-zA-Z0-9" < /dev/urandom | head -c 10; echo)
+        until RANDKEY=$(dd bs=21 count=1 if=/dev/urandom |
+           LC_CTYPE=C LC_ALL=C tr -cd A-Za-z0-9)
+            ((${#RANDKEY} >= 10)); do :; done
 
         for file in .env.local .env.prod; do
             sed -i "" "s/change_this_string/$RANDKEY/g" "$TARGET_DIR/$file"
