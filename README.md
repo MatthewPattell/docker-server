@@ -10,13 +10,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```bash
-php composer.phar require --prefer-dist matthew-p/docker-server "^4.10.0"
+php composer.phar require --prefer-dist matthew-p/docker-server "^4.11.0"
 ```
 
 or add
 
 ```
-"matthew-p/docker-server": "^4.10.0"
+"matthew-p/docker-server": "^4.11.0"
 ```
 
 to the require section of your `composer.json` file.
@@ -28,14 +28,14 @@ to the require section of your `composer.json` file.
     ```json5
     {
         "scripts": {
-            "server": "vendor/bin/site-start.sh --env-file=docker/.env-local",
-            "server-run": "vendor/bin/site-run.sh --env-file=docker/.env-local",
-            "server-exec": "vendor/bin/site-exec.sh --env-file=docker/.env-local",
+            "server": "vendor/bin/site-start.sh --env-file=docker/.env.local",
+            "server-run": "vendor/bin/site-run.sh --env-file=docker/.env.local",
+            "server-exec": "vendor/bin/site-exec.sh --env-file=docker/.env.local",
 
             // (optional)
-            "server-prod": "vendor/bin/site-aws.sh --env-file=docker/.env-prod",
+            "server-prod": "vendor/bin/site-aws.sh --env-file=docker/.env.prod",
             // (optional)
-            "server-deploy-dev": "vendor/bin/site-deploy.sh --env-file=docker/.env-dev"
+            "server-deploy-dev": "vendor/bin/site-deploy.sh --env-file=docker/.env.dev"
         }
     }
     ```
