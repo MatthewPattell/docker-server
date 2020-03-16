@@ -1,0 +1,27 @@
+version: '2'
+
+services:
+  server:
+    hostname: server
+    image: ${SERVER_NODE_REPOSITORY}
+    container_name: ${COMPOSE_PROJECT_NAME}_server
+    environment:
+      ENV_PATH: ${PROJECT_DOCKER_FOLDER_CONTAINER}/.env
+    labels:
+      project: ${PROJECT_NAME}
+      container: ${COMPOSE_PROJECT_NAME}_server
+    volumes:
+      - ${PROJECT_ROOT}:${PROJECT_ROOT_CONTAINER}
+      - ${PACKAGE_DOCKER_FOLDER}:${PACKAGE_DOCKER_FOLDER_CONTAINER}
+      - ${PACKAGE_DOCKER_FOLDER}/scripts:/scripts
+      - ${PROJECT_DOCKER_FOLDER}/letsencrypt/${PROJECT_ENVIRONMENT}:/etc/letsencrypt
+    working_dir: ${PROJECT_ROOT_CONTAINER}
+    command: npm run start
+    networks:
+      common:
+        aliases:
+          - server
+
+networks:
+  common:
+    driver: bridge
