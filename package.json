@@ -1,0 +1,38 @@
+{
+    "name": "@matthew-p/docker-server",
+    "version": "1.0.5",
+    "dependencies": {
+    },
+    "description": "Universal docker server, Nginx, Node, MySql, Redis",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/MatthewPattell/docker-server.git"
+    },
+    "keywords": [
+        "docker",
+        "server",
+        "node",
+        "nodejs",
+        "nginx",
+        "mysql",
+        "redis",
+        "docker-compose",
+        "universal",
+        "dynamic",
+        "deploy",
+        "composer"
+    ],
+    "author": "Yarmaliuk Mikhail",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/MatthewPattell/docker-server/issues"
+    },
+    "homepage": "https://github.com/MatthewPattell/docker-server",
+    "bin": {
+        "docker-server-start": "bin/site-start.sh",
+        "docker-server-exec": "bin/site-exec.sh",
+        "docker-server-run": "bin/site-run.sh",
+        "docker-server-aws": "bin/site-aws.sh",
+        "docker-server-deploy": "bin/site-deploy.sh"
+    }
+}

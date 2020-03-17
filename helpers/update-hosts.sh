@@ -19,11 +19,11 @@ HOST_END_SECTION="# ${PROJECT_NAME}-uds-end"
 HOSTS_ADDED=""
 
 if [[ "$ACTION" != "down" ]]; then
-    export HOST_ETC_HOSTS_IP=$(nginxProxyIp)
+    export HOST_ETC_HOST_IP=$(nginxProxyIp)
 
-    if [ "$HOST_ETC_HOSTS_IP" != "" ]; then
+    if [ "$HOST_ETC_HOST_IP" != "" ]; then
         # Generate unique section for hosts file
-        HOSTS_ADDED="$HOST_NEWLINE$HOST_BEGIN_SECTION$HOST_NEWLINE$HOST_ETC_HOSTS_IP $HOSTS_ADDED_DOMAINS$HOST_NEWLINE$HOST_END_SECTION"
+        HOSTS_ADDED="$HOST_NEWLINE$HOST_BEGIN_SECTION$HOST_NEWLINE$HOST_ETC_HOST_IP $HOSTS_ADDED_DOMAINS$HOST_NEWLINE$HOST_END_SECTION"
     fi
 fi
 

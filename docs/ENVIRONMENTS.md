@@ -48,6 +48,7 @@ Property | Values | Description
 ---------|--------|------------
 `NGINX_REPOSITORY`| `(string)` `Default: matthewpatell/universal-docker-nginx:3.7` | Nginx docker image
 `SERVER_REPOSITORY`| `(string)` `Default: matthewpatell/universal-docker-server:4.0-dev` | Either server (or server dev) image in non-scalable configuration, or `matthewpatell/universal-docker-server-php-fpm` for scaling `nginx`+`php-fpm`.
+`SERVER_NODE_REPOSITORY`| `(string)` `Default: node:13.10` | Either server image for scaling `nginx`+`node`.
 `TERMINAL_REPOSITORY`| `(string)` `Default: none` | Static non-scalable docker image for ssh connection, cron, queue listener and etc. Use image: `matthewpatell/universal-docker-server`.
 
 ## <a id="server-envs"></a>Server env (service: server)
@@ -133,8 +134,8 @@ Property | Values | Description
 `HOST_NGINX_PROXIES`| `yes`/`no` `Default: no` | Create nginx proxy config file automatically (proxy to docker container nginx)
 `HOST_NGINX_KEEP_CONF`| `yes`/`no` `Default: no` | Set `yes` for keep created nginx proxy conf file after `server down`
 `HOST_NGINX_TEMPLATE_PATH`| `(string)` `Default: ${VENDOR_DIR}/conf/nginx-proxy.conf` | Template nginx proxy conf
-`HOST_NGINX_CONF_DIR`| `(string)` `Default: /usr/local/etc/nginx/servers` | Nginx configs dir on host machine
-`HOST_NGINX_RESTART_COMMAND`| `(string)` `Default: "sudo brew services restart nginx"` | Restart nginx command on host machine
+`HOST_NGINX_CONF_DIR`| `(string)` `Default: /etc/nginx/sites-enabled` | Nginx configs dir on host machine
+`HOST_NGINX_RESTART_COMMAND`| `(string)` `Default: "service nginx restart"` | Restart nginx command on host machine
 `NGINX_DEFAULT_HOST` | `yes`/`no` `Default: no` | Enable/disable default nginx host
 
 ## <a id="auto-update-hosts-envs"></a>Auto update hosts env (host machine)

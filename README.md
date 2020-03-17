@@ -1,53 +1,81 @@
 Universal docker server
 ===========================
-Nginx (1.17.8), PHP (7.4), MySql (5.7), Redis (5.0.7)
+Nginx (1.17.8), PHP (7.4) / Node (13.10), MySql (5.7), Redis (5.0.7)
 
 Installation
 ------------
 
-The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
+The preferred way to install this extension.
 
 Either run
 
-```bash
-php composer.phar require --prefer-dist matthew-p/docker-server "^4.11.0"
-```
-
-or add
-
-```
-"matthew-p/docker-server": "^4.11.0"
-```
-
-to the require section of your `composer.json` file.
+ - for **composer** 
+    ```bash
+    php composer.phar require --prefer-dist matthew-p/docker-server
+    ```
+   
+   or add
+   
+   ```
+   "matthew-p/docker-server": "^4.11.0"
+   ```
+   
+   to the require section of your `composer.json` file.
+ - for **npm**
+    ```bash
+    npm i --save @matthew-p/docker-server@latest
+    ```
+   or add
+   
+   ```
+   "@matthew-p/docker-server": "^4.11.0"
+   ```
+   to the dependencies section of your `package.json` file.
 
 ## After install package:
 
-1. Add or update section **scripts** in **composer.json**:
+1. Add or update section **scripts** in **composer.json** or **package.json**:  
 
-    ```json5
-    {
-        "scripts": {
-            "server": "vendor/bin/site-start.sh --env-file=docker/.env.local",
-            "server-run": "vendor/bin/site-run.sh --env-file=docker/.env.local",
-            "server-exec": "vendor/bin/site-exec.sh --env-file=docker/.env.local",
-
-            // (optional)
-            "server-prod": "vendor/bin/site-aws.sh --env-file=docker/.env.prod",
-            // (optional)
-            "server-deploy-dev": "vendor/bin/site-deploy.sh --env-file=docker/.env.dev"
+    - for **composer.json**
+        ```json5
+        {
+            "scripts": {
+                "server": "vendor/bin/site-start.sh --env-file=docker/.env.local",
+                "server-run": "vendor/bin/site-run.sh --env-file=docker/.env.local",
+                "server-exec": "vendor/bin/site-exec.sh --env-file=docker/.env.local",
+    
+                // (optional)
+                "server-prod": "vendor/bin/site-aws.sh --env-file=docker/.env.prod",
+                // (optional)
+                "server-deploy-dev": "vendor/bin/site-deploy.sh --env-file=docker/.env.dev"
+            }
         }
-    }
-    ```
+        ```
+   - for **package.json**
+       ```json5
+       {
+           "scripts": {
+               "server": "docker-server-start --env-file=docker/.env.local",
+               "server-run": "docker-server-run --env-file=docker/.env.local",
+               "server-exec": "docker-server-exec --env-file=docker/.env.local",
+   
+               // (optional)
+               "server-prod": "docker-server-aws --env-file=docker/.env.prod",
+               // (optional)
+               "server-deploy-dev": "docker-server-deploy --env-file=docker/.env.dev"
+           }
+       }
+       ```
+   
     where **"docker/.env.local"** relative path to your local env config _(will be created in next step)_.
 
-1. Run: ```composer server init```. This will create a **docker** folder in your project root directory.
+1. Run: ```composer server init``` or ```npm run server init```. This will create a **docker** folder in your project root directory.
 
 1. Change **root-path** in _docker/nginx/conf-dynamic.d/sample.conf_
 
 1. See [supported os](#supported-os) and config **docker/.env.local** according to your operating system
 
-1. Run server: ```composer server up ```
+1. Run server: ```composer server up ``` or ```npm run server up```
 
 ## Supported OS
  - [Linux](docs/LINUX.md)
@@ -69,6 +97,8 @@ to the require section of your `composer.json` file.
     - matthewpatell/universal-docker-server:4.0-jre (with java)
  - PHP-FPM:
     - matthewpatell/universal-docker-server-php-fpm:4.0
+ - NODE:
+    - node:13.10
 
 **FEATURES**
 ---

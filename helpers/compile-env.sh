@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 for i in "$@"; do
-    case $i in
+    case ${i} in
     -e=* | --env-file=*)
         ENV_FILES="${i#*=}"
         shift
@@ -20,15 +20,21 @@ source "$CURRENT_DIR/functions/base.sh"
 VENDOR_DIR=$(dirname "$CURRENT_DIR")
 
 # Get vendor parent dir
-VENDOR_PARENT_DIR=$(sed -n -e 's/\(^.*\)\(\(\/vendor\).*\)/\1/p' <<<"$VENDOR_DIR")
+VENDOR_PARENT_DIR=$(sed -n -e 's/\(^.*\)\(\(\/vendor\).*\)/\1/p' <<< "$VENDOR_DIR")
+if [[ -z "$VENDOR_PARENT_DIR" ]]; then
+    VENDOR_PARENT_DIR=$(sed -n -e 's/\(^.*\)\(\(\/node_modules\).*\)/\1/p' <<< "$VENDOR_DIR")
+fi
 # Get vendor common dir
-VENDOR_COMMON_DIR=$(sed -n -e 's/\(^.*\)\(\(\/vendor\).*\)/\2/p' <<<"$VENDOR_DIR")
+VENDOR_COMMON_DIR=$(sed -n -e 's/\(^.*\)\(\(\/vendor\).*\)/\2/p' <<< "$VENDOR_DIR")
+if [[ -z "$VENDOR_COMMON_DIR" ]]; then
+    VENDOR_COMMON_DIR=$(sed -n -e 's/\(^.*\)\(\(\/node_modules\).*\)/\2/p' <<< "$VENDOR_DIR")
+fi
 
 # Add default env to config
 ENV_FILES="${VENDOR_DIR}/docker/.env-default,${ENV_FILES}"
 
 # Detect server init
-[ "$ACTION" = "init" ] && return
+[[ "$ACTION" = "init" ]] && return
 
 # Handle env files
 SERVER_ENVS=(" ")
@@ -38,7 +44,7 @@ IFS=',' read -ra ADDR <<<"$ENV_FILES"
 for ENV_FILE in "${ADDR[@]}"; do
     ENV_FILE_FULL_PATH=$(realpath "$ENV_FILE")
 
-    if [ ! -f "$ENV_FILE_FULL_PATH" ]; then
+    if [[ ! -f "$ENV_FILE_FULL_PATH" ]]; then
         echo "Env file does not exist (skip): $ENV_FILE"
     else
         # Getting environments for using in current and parent script
@@ -49,7 +55,7 @@ for ENV_FILE in "${ADDR[@]}"; do
 
         while IFS='=' read -r name value; do
             case "$name" in \#*) continue ;; esac
-            if [ ! -z "$name" ] && [ ! -z "$value" ]; then
+            if [[ ! -z "$name" ]] && [[ ! -z "$value" ]]; then
                 # Collect the environments, which will be added to result file
                 if [[ ! ${SERVER_ENVS[@]} =~ " $name " ]] &&
                     [[ ! ${SERVER_ENVS[@]} =~ "$name " ]] &&
@@ -58,7 +64,7 @@ for ENV_FILE in "${ADDR[@]}"; do
                 fi
 
                 # Collect the environments, which will be recompile
-                if [[ $value == *"\${"* ]]; then
+                if [[ ${value} == *"\${"* ]]; then
                     if [[ ! ${SERVER_ENVS_RECOMPILE_NAMES[@]} =~ " $name " ]] &&
                         [[ ! ${SERVER_ENVS_RECOMPILE_NAMES[@]} =~ "$name " ]] &&
                         [[ ! ${SERVER_ENVS_RECOMPILE_NAMES[@]} =~ " $name" ]]; then
@@ -67,7 +73,7 @@ for ENV_FILE in "${ADDR[@]}"; do
 
                     nameIndex=$(indexOf "$name" "${SERVER_ENVS_RECOMPILE_NAMES[@]}")
 
-                    SERVER_ENVS_RECOMPILE_VALUES[$nameIndex]=$value
+                    SERVER_ENVS_RECOMPILE_VALUES[$nameIndex]=${value}
                 fi
             fi
         done <"$ENV_FILE_FULL_PATH"
@@ -89,7 +95,7 @@ fi
 echo -n "" >"$TMP_RECOMPILE_ENVS"
 for recompile_env_name_index in ${!SERVER_ENVS_RECOMPILE_NAMES[@]}; do
     recompile_env_name=${SERVER_ENVS_RECOMPILE_NAMES[$recompile_env_name_index]}
-    echo "$recompile_env_name=${SERVER_ENVS_RECOMPILE_VALUES[$recompile_env_name_index]}" >>$TMP_RECOMPILE_ENVS
+    echo "$recompile_env_name=${SERVER_ENVS_RECOMPILE_VALUES[$recompile_env_name_index]}" >> ${TMP_RECOMPILE_ENVS}
 done
 # Recompile && remove tmp file
 . "$TMP_RECOMPILE_ENVS"
@@ -99,8 +105,8 @@ rm "$TMP_RECOMPILE_ENVS"
 SERVICES_PATHS=""
 
 for SERVICE in $SERVICES; do
-    if [ "${SERVICE: -3}" = "yml" ]; then
-        if [ "${SERVICE:0:2}" = "!!" ]; then
+    if [[ "${SERVICE: -3}" = "yml" ]]; then
+        if [[ "${SERVICE:0:2}" = "!!" ]]; then
             SERVICES_PATHS="${SERVICES_PATHS} -f $(realpath "${VENDOR_DIR}/docker/${SERVICE:2}")"
         else
             SERVICES_PATHS="${SERVICES_PATHS} -f $(realpath "$SERVICE")"
@@ -108,19 +114,19 @@ for SERVICE in $SERVICES; do
     fi
 done
 
-export SERVICES=$SERVICES_PATHS
+export SERVICES=${SERVICES_PATHS}
 
 # Generated env path
 export PROJECT_ENV_PATH="${PROJECT_DOCKER_FOLDER}/.env"
-ENV_PATH=$PROJECT_ENV_PATH
+ENV_PATH=${PROJECT_ENV_PATH}
 
 if [ ! -z "$PROJECT_ENV_PATH_FORCE" ]; then
     ENV_PATH="${PROJECT_ENV_PATH_FORCE}/.env-compiled"
 fi
 
 # if action = down, keep and export old environments
-if [ "$ACTION" = "down" ] || [ "$ACTION" = "restart" ]; then
-    if [ -f "$PROJECT_ENV_PATH" ]; then
+if [[ "$ACTION" = "down" ]] || [[ "$ACTION" = "restart" ]]; then
+    if [[ -f "$PROJECT_ENV_PATH" ]]; then
         set -a
         . "$PROJECT_ENV_PATH"
         set +a
@@ -130,9 +136,9 @@ if [ "$ACTION" = "down" ] || [ "$ACTION" = "restart" ]; then
 fi
 
 # Collect all project environment to result temp env file
-if [ "$ENV_PATH" != "" ]; then
+if [[ "$ENV_PATH" != "" ]]; then
     PROJECT_ENV_PATH_TMP=$(dirname "$ENV_PATH")
-    if [ -d "$PROJECT_ENV_PATH_TMP" ]; then
+    if [[ -d "$PROJECT_ENV_PATH_TMP" ]]; then
         IFS=$'\n' SERVER_ENVS=($(sort <<<"${SERVER_ENVS[*]}"))
         unset IFS
 
