@@ -12,9 +12,9 @@ function getVendorPath() {
 
 function universalSed() {
     if [[ "$OSTYPE" == "darwin"* ]]; then
-        sed -i "" $1 $2
+        sed -i "" "$1" "$2"
     else
-        sed -i $1 $2
+        sed -i "$1" "$2"
     fi
 }
 
