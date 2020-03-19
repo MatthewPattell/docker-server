@@ -10,6 +10,14 @@ function getVendorPath() {
   echo "$vendor$package"
 }
 
+function universalSed() {
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        sed -i "" $1 $2
+    else
+        sed -i $1 $2
+    fi
+}
+
 # get package vendor dir
 VENDOR_DIR=$(getVendorPath "${BASH_SOURCE[0]}")
 
@@ -58,17 +66,17 @@ elif [[ "$ACTION" = "init" ]]; then
             ((${#RANDKEY} >= 10)); do :; done
 
         for file in .env.local .env.prod; do
-            sed -i "" "s/change_this_string/$RANDKEY/g" "$TARGET_DIR/$file"
+            universalSed "s/change_this_string/$RANDKEY/g" "$TARGET_DIR/$file"
         done
 
         # Configure NODE env
         if [[ "$IS_NODE" == 1 ]]; then
             # Fix nginx template for node
-            sed -i "" "s/\/var\/www\/html\/frontend\/web/\/var\/www\/html/g" "$TARGET_DIR/nginx/conf-dynamic.d/domain.conf"
-            sed -i "" "s/templates\/domain.conf/templates\/node.conf/g" "$TARGET_DIR/nginx/conf-dynamic.d/domain.conf"
+            universalSed "s/\/var\/www\/html\/frontend\/web/\/var\/www\/html/g" "$TARGET_DIR/nginx/conf-dynamic.d/domain.conf"
+            universalSed "s/templates\/domain.conf/templates\/node.conf/g" "$TARGET_DIR/nginx/conf-dynamic.d/domain.conf"
 
             # Fix env services
-            sed -i "" "s/\${SERVICES}/\${SERVICES_NODE}/g" "$TARGET_DIR/.env.local"
+            universalSed "s/\${SERVICES}/\${SERVICES_NODE}/g" "$TARGET_DIR/.env.local"
 
             # Remove prod env (must be created manualy)
             rm "$TARGET_DIR/.env.prod"
@@ -81,13 +89,13 @@ elif [[ "$ACTION" = "init" ]]; then
 
         # Configure macos
         if [[ "$OSTYPE" == "darwin"* ]]; then
-            sed -i "" "s/# HOST_NGINX_CONF_DIR/HOST_NGINX_CONF_DIR/g" "$TARGET_DIR/.env.local"
-            sed -i "" "s/# HOST_NGINX_RESTART_COMMAND/HOST_NGINX_RESTART_COMMAND/g" "$TARGET_DIR/.env.local"
-            sed -i "" "s/# HOST_ETC_HOST_IP/HOST_ETC_HOST_IP/g" "$TARGET_DIR/.env.local"
+            universalSed "s/# HOST_NGINX_CONF_DIR/HOST_NGINX_CONF_DIR/g" "$TARGET_DIR/.env.local"
+            universalSed "s/# HOST_NGINX_RESTART_COMMAND/HOST_NGINX_RESTART_COMMAND/g" "$TARGET_DIR/.env.local"
+            universalSed "s/# HOST_ETC_HOST_IP/HOST_ETC_HOST_IP/g" "$TARGET_DIR/.env.local"
         else
-            sed -i "" "s/# HOST_NGINX_CONF_DIR//g" "$TARGET_DIR/.env.local"
-            sed -i "" "s/# HOST_NGINX_RESTART_COMMAND//g" "$TARGET_DIR/.env.local"
-            sed -i "" "s/# HOST_ETC_HOST_IP//g" "$TARGET_DIR/.env.local"
+            universalSed "s/# HOST_NGINX_CONF_DIR//g" "$TARGET_DIR/.env.local"
+            universalSed "s/# HOST_NGINX_RESTART_COMMAND//g" "$TARGET_DIR/.env.local"
+            universalSed "s/# HOST_ETC_HOST_IP//g" "$TARGET_DIR/.env.local"
         fi
 
         echo "Server init success."

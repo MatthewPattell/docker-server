@@ -22,7 +22,7 @@ ACTION="AWS_$(echo "$1" | tr '[:lower:]' '[:upper:]')"
 ACTION="${ACTION[@]/-/_}"
 COMMAND=${!ACTION}
 
-if [ ! -z "$COMMAND" ]; then
+if [[ ! -z "$COMMAND" ]]; then
     eval "${COMMAND[@]/-SERVICES-/$SERVICES}"
 else
     echo "Command not found."
