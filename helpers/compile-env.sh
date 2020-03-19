@@ -58,8 +58,8 @@ for ENV_FILE in "${ADDR[@]}"; do
             if [[ ! -z "$name" ]] && [[ ! -z "$value" ]]; then
                 # Collect the environments, which will be added to result file
                 if [[ ! ${SERVER_ENVS[@]} =~ " $name " ]] &&
-                    [[ ! ${SERVER_ENVS[@]} =~ "$name " ]] &&
-                    [[ ! ${SERVER_ENVS[@]} =~ " $name" ]]; then
+                    [[ ${SERVER_ENVS[1]} != "$name" ]] && # first element
+                    [[ ${SERVER_ENVS[${#SERVER_ENVS[@]}-1]} != "$name" ]]; then # last element
                     SERVER_ENVS+=("$name")
                 fi
 
