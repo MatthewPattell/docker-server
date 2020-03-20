@@ -28,7 +28,7 @@ Either run
    or add
    
    ```
-   "@matthew-p/docker-server": "^4.11.0"
+   "@matthew-p/docker-server": "^1.0.10"
    ```
    to the dependencies section of your `package.json` file.
 
@@ -98,7 +98,7 @@ Either run
  - PHP-FPM:
     - matthewpatell/universal-docker-server-php-fpm:4.0
  - NODE:
-    - node:13.10
+    - node:13.10-alpine
 
 **FEATURES**
 ---
