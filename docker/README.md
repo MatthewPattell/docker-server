@@ -8,6 +8,9 @@
 * Certbot
 * Cron
 
+# NODE docker container
+* NODE 13.10
+
 # MySQL docker container
 * MySQL 5.7
 
