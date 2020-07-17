@@ -81,7 +81,9 @@ for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.c
     echo "" >> "${TARGET_CONFIG_PATH}"
 
     # root path
-    REPLACE_ROOT=$(findPattern "root-path" "$BASE_TEMPLATE_CODE}")
+    if [[ -z "${REPLACE_ROOT}" ]]; then
+        REPLACE_ROOT=$(findPattern "root-path" "$BASE_TEMPLATE_CODE}")
+    fi
 
     # custom snippets
     REPLACE_CUSTOM_SNIPPETS=$(findPattern "custom-snippets" "$BASE_TEMPLATE_CODE}")
