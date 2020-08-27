@@ -14,7 +14,12 @@ set +a
 
 bash /scripts/set-permissions.sh
 
+until RANDKEY=$(dd bs=21 count=1 if=/dev/urandom |
+   LC_CTYPE=C LC_ALL=C tr -cd A-Za-z0-9)
+    ((${#RANDKEY} >= 10)); do :; done
+
 ENVIRONMENT=$(echo "$PROJECT_ENVIRONMENT" | tr '[:upper:]' '[:lower:]')
+NGINX_LIMIT_KEY=${NGINX_LIMIT_KEY:=${RANDKEY}}
 
 # find patterns on config files: <tag-name>search-string</tag-name>
 # Example: findPattern "pattern-name" "<pattern-name>string search</pattern-name>"

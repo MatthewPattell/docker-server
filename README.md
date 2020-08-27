@@ -17,7 +17,7 @@ Either run
    or add
    
    ```
-   "matthew-p/docker-server": "^4.11.0"
+   "matthew-p/docker-server": "^5.1.0"
    ```
    
    to the require section of your `composer.json` file.
@@ -28,7 +28,7 @@ Either run
    or add
    
    ```
-   "@matthew-p/docker-server": "^1.0.10"
+   "@matthew-p/docker-server": "^1.1.1"
    ```
    to the dependencies section of your `package.json` file.
 
