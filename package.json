@@ -1,6 +1,6 @@
 {
     "name": "@matthew-p/docker-server",
-    "version": "1.5.1",
+    "version": "1.5.2",
     "dependencies": {
     },
     "description": "Universal docker server, Nginx, Node, MySql, Redis",
