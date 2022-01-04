@@ -20,6 +20,7 @@ until RANDKEY=$(dd bs=21 count=1 if=/dev/urandom |
 
 ENVIRONMENT=$(echo "$PROJECT_ENVIRONMENT" | tr '[:upper:]' '[:lower:]')
 NGINX_LIMIT_KEY=${NGINX_LIMIT_KEY:=${RANDKEY}}
+PORT={PORT:=80}
 
 # find patterns on config files: <tag-name>search-string</tag-name>
 # Example: findPattern "pattern-name" "<pattern-name>string search</pattern-name>"
@@ -112,6 +113,7 @@ for TEMPLATE_NAME in ${PACKAGE_DOCKER_FOLDER_CONTAINER}/nginx/conf-dynamic.d/*.c
         TEMPLATE_CODE="${TEMPLATE_CODE//\$ROOT_PATH/$REPLACE_ROOT}"
         TEMPLATE_CODE="${TEMPLATE_CODE//\$CUSTOM_SNIPPETS/$REPLACE_CUSTOM_SNIPPETS}"
         TEMPLATE_CODE="${TEMPLATE_CODE//\$DEFAULT/$DEFAULT_HOST}"
+        TEMPLATE_CODE="${TEMPLATE_CODE//\$PORT/$PORT}"
 
         for i in ${!SSL_DOMAINS[*]}; do
             LIST_CERTIFICATE_DOMAINS=$(echo "${SSL_DOMAINS[$i]}" | cut -d ':' -f 2)
